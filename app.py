@@ -241,7 +241,9 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
     else:
         tre = st.session_state.tre_hien_tai
         st.subheader(f"📋 Đánh giá ASQ-3 cho: {tre['ten']} — {tre['tuoi']}")
-        st.caption(f"Ngày: {tre['ngay_danh_gia']} | Người đánh giá: {tre['nguoi_danh_gia']}")
+        ngay_dg = tre.get('ngay_danh_gia', tre.get('ngay_tao', 'Không có ngày'))
+nguoi_dg = tre.get('nguoi_danh_gia', tre.get('nguoi_danh_gia', 'Không có thông tin'))
+st.caption(f"Ngày: {ngay_dg} | Người đánh giá: {nguoi_dg}")
         
         tong_diem = {}
         for linh_vuc, danh_sach_cau in cau_hoi_asq3.items():
