@@ -65,13 +65,54 @@ cau_hoi_asq3 = {
 with st.sidebar:
     st.header("👶 Danh sách trẻ")
     
+    # ==== HÀM TÍNH THÁNG TUỔI ====
+    def tinh_thang_tuoi(ngay_sinh):
+        if not ngay_sinh:
+            return 0
+        hom_nay = datetime.now().date()
+        so_thang = (hom_nay.year - ngay_sinh.year) * 12 + (hom_nay.month - ngay_sinh.month)
+        if hom_nay.day < ngay_sinh.day:
+            so_thang -= 1
+        return max(0, so_thang)
+    
+    def xac_dinh_nhom_tuoi(so_thang):
+        if 18 <= so_thang <= 24:
+            return "18-24 tháng"
+        elif 25 <= so_thang <= 36:
+            return "25-36 tháng"
+        elif so_thang < 18:
+            return f"{so_thang} tháng (dưới 18 tháng)"
+        else:
+            return f"{so_thang} tháng (trên 36 tháng)"
+    
     # ==== THÊM TRẺ MỚI ====
     with st.expander("➕ Thêm trẻ mới"):
         ten_tre_moi = st.text_input("Tên trẻ:")
-        ngay_sinh_moi = st.date_input("Ngày sinh:")
-        nhom_tuoi_moi = st.selectbox("Nhóm độ tuổi:", 
-                                       ["18-24 tháng", "25-36 tháng"], 
-                                       key="tuoi_moi")
+        ngay_sinh_moi = st.date_input("Ngày sinh:", value=None)
+        
+        # Tự tính tháng tuổi và nhóm tuổi
+        if ngay_sinh_moi:
+            thang_tuoi = tinh_thang_tuoi(ngay_sinh_moi)
+            nhom_tuoi_tu_dong = xac_dinh_nhom_tuoi(thang_tuoi)
+            st.info(f"🎂 **Tháng tuổi hiện tại:** {thang_tuoi} tháng — **Nhóm tuổi:** {nhom_tuoi_tu_dong}")
+            
+            # Chọn nhóm tuổi (có thể điều chỉnh nếu cần)
+            if "18-24" in nhom_tuoi_tu_dong:
+                mac_dinh = 0
+            elif "25-36" in nhom_tuoi_tu_dong:
+                mac_dinh = 1
+            else:
+                mac_dinh = 0
+                st.warning("⚠️ Trẻ ngoài độ tuổi 18-36 tháng — vui lòng chọn nhóm phù hợp nhất!")
+            
+            nhom_tuoi_moi = st.selectbox("Nhóm độ tuổi:", 
+                                           ["18-24 tháng", "25-36 tháng"], 
+                                           key="tuoi_moi", index=mac_dinh)
+        else:
+            nhom_tuoi_moi = st.selectbox("Nhóm độ tuổi:", 
+                                           ["18-24 tháng", "25-36 tháng"], 
+                                           key="tuoi_moi")
+        
         nguoi_danh_gia = st.text_input("Người đánh giá:")
         ghi_chu = st.text_area("Ghi chú:")
         
@@ -102,7 +143,27 @@ with st.sidebar:
         st.session_state.tre_hien_tai = st.session_state.danh_sach_tre[chi_so_chon]
         tre = st.session_state.tre_hien_tai
         
-        st.info(f"✅ Đang làm việc với: **{tre['ten']}**")
+    # Tính tháng tuổi hiển thị
+        if 'ngay_sinh' in tre and tre['ngay_sinh']:
+            try:
+                from datetime import datetime
+                ns = tre['ngay_sinh']
+                if isinstance(ns, datetime):
+                    ns_date = ns.date()
+                else:
+                    ns_date = ns
+                
+                hom_nay = datetime.now().date()
+                thang_tuoi = (hom_nay.year - ns_date.year) * 12 + (hom_nay.month - ns_date.month)
+                if hom_nay.day < ns_date.day:
+                    thang_tuoi -= 1
+                thang_tuoi = max(0, thang_tuoi)
+                
+                st.info(f"✅ Đang làm việc với: **{tre['ten']}** — {thang_tuoi} tháng tuổi")
+            except:
+                st.info(f"✅ Đang làm việc với: **{tre['ten']}**")
+        else:
+            st.info(f"✅ Đang làm việc với: **{tre['ten']}**")
         
         # Nút xóa trẻ
         if st.button("🗑️ Xóa trẻ này"):
