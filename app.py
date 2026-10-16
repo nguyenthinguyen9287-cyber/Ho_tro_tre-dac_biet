@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 # Lấy API Key từ Secrets
-API_KEY = st.secrets.get("GOOGLE_API_KEY", "")
+API_KEY ="AQ.Ab8RN6LtXF8dfURCvlARItSSBGyW9haUrfBG_TNcKVtoP7Nkhg"
 if API_KEY:
     genai.configure(api_key=API_KEY)
 
