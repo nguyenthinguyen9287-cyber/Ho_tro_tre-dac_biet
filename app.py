@@ -255,21 +255,22 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
             st.markdown(f"**Câu {so_thu_tu}/6:** {cau_hoi['cau']}")
             st.caption(f"💡 {cau_hoi['mo_ta']}")
 
-            lua_chon = st.radio(
-                label=f"Đáp án {so_thu_tu}",
-                options=["Có", "Đôi khi", "Chưa"],
-                key=f"asq3_{linh_vuc}_{so_thu_tu}",
-                index=2,
-                    horizontal=True
-                )
-                
-                if lua_chon == "Có":
-                    diem_linh_vuc += 10
-                elif lua_chon == "Đôi khi":
-                    diem_linh_vuc += 5
-                else:
-                    diem_linh_vuc += 0
-                st.divider()
+        lua_chon = st.radio(
+          label=f"Đáp án {so_thu_tu}",
+          options=["Có", "Đôi khi", "Chưa"],
+          key=f"asq3_{linh_vuc}_{so_thu_tu}",
+          index=2,
+          horizontal=True
+        )
+
+        if lua_chon == "Có":
+           diem_linh_vuc += 10
+        elif lua_chon == "Đôi khi":
+           diem_linh_vuc += 5
+        else:
+           diem_linh_vuc += 0
+
+st.divider()
             
             tong_diem[linh_vuc] = diem_linh_vuc
             st.info(f"📊 **Tổng điểm: {diem_linh_vuc}/60**")
