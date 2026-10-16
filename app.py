@@ -259,7 +259,7 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
                 label=f"Đáp án {so_thu_tu}",
                 options=["Có", "Đôi khi", "Chưa"],
                 key=f"asq3_{linh_vuc}_{so_thu_tu}",
-                index=2
+                index=2,
                     horizontal=True
                 )
                 
