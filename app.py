@@ -332,9 +332,163 @@ elif tab_chon == "🔍 Sàng lọc sớm":
         st.success("✅ Đã lưu kết quả sàng lọc vào lịch sử!")
 
 # ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
+# ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
 elif tab_chon == "📄 Tạo kế hoạch cá nhân":
-    st.subheader("📄 Kế hoạch hỗ trợ cá nhân")
-    st.info("Chức năng đang được phát triển. Vui lòng quay lại sau!")
+    st.subheader("📄 Kế hoạch hỗ trợ phát triển cá nhân cho trẻ")
+    
+    if not st.session_state.tre_hien_tai:
+        st.warning("⚠️ Vui lòng chọn trẻ ở thanh bên trái trước khi lập kế hoạch!")
+    else:
+        tre = st.session_state.tre_hien_tai
+        ten_tre = tre.get('ten', 'Trẻ')
+        tuoi_tre = tre.get('tuoi', '')
+        ngay_sinh = tre.get('ngay_sinh', '')
+        nguoi_lap = st.text_input("Người lập kế hoạch:", value=tre.get('nguoi_danh_gia', ''))
+        ngay_lap = datetime.now().strftime("%d/%m/%Y")
+        
+        st.info(f"📋 Lập kế hoạch cho: **{ten_tre}** — {tuoi_tre}")
+        st.divider()
+        
+        # ==== Thông tin chung & Điểm mạnh ====
+        st.markdown("### 💪 Điểm mạnh của trẻ")
+        diem_manh = st.text_area("Trẻ có những khả năng/điểm mạnh nào?", 
+            placeholder="Ví dụ: Trẻ rất thân thiện, thích giao tiếp với bạn bè, nhớ nhanh bài hát...", height=100)
+        
+        st.markdown("### 🔍 Lĩnh vực cần hỗ trợ thêm")
+        linh_vuc_can_ho_tro = st.multiselect("Chọn lĩnh vực cần tập trung hỗ trợ:",
+            ["Ngôn ngữ & Giao tiếp", "Vận động tinh", "Vận động thô", 
+             "Giải quyết vấn đề", "Kỹ năng xã hội", "Tự phục vụ", "Chú ý & Hành vi"])
+        
+        mo_ta_kho_khan = st.text_area("Mô tả cụ thể những khó khăn trẻ đang gặp:",
+            placeholder="Ví dụ: Trẻ chưa tự tin nói trước nhóm, hay ngại giao tiếp bằng mắt...", height=120)
+        
+        st.divider()
+        
+        # ==== Mục tiêu hỗ trợ ====
+        st.markdown("### 🎯 Mục tiêu hỗ trợ")
+        muc_tieu_ngan_han = st.text_area("Mục tiêu ngắn hạn (1–3 tháng):",
+            placeholder="Ví dụ: Trẻ tự giới thiệu được tên mình khi được hỏi", height=80)
+        muc_tieu_dai_han = st.text_area("Mục tiêu dài hạn (6–12 tháng):",
+            placeholder="Ví dụ: Trẻ tự tin giao tiếp với bạn bè và người xung quanh", height=80)
+        
+        st.divider()
+        
+        # ==== Giải pháp hỗ trợ theo lĩnh vực ====
+        st.markdown("### 🛠️ Giải pháp hỗ trợ cụ thể")
+        
+        giai_phap = {}
+        for linh_vuc in linh_vuc_can_ho_tro:
+            with st.expander(f"📌 Hoạt động hỗ trợ: {linh_vuc}"):
+                hoat_dong = st.text_area(f"Các hoạt động thường xuyên:",
+                    placeholder="Liệt kê hoạt động, trò chơi phù hợp với trẻ",
+                    key=f"hd_{linh_vuc}", height=100)
+                tan_suat = st.select_slider(f"Tần suất thực hiện:",
+                    options=["1 lần/ngày", "2–3 lần/tuần", "Hàng ngày", "Theo nhu cầu"],
+                    key=f"ts_{linh_vuc}")
+                nguoi_thuc_hien = st.text_input(f"Người chịu trách nhiệm:",
+                    placeholder="Giáo viên / Phụ huynh", key=f"nguoi_{linh_vuc}")
+                ghi_chu = st.text_area(f"Ghi chú & điều chỉnh:",
+                    placeholder="Cách điều chỉnh khi trẻ chưa tham gia...",
+                    key=f"gc_{linh_vuc}", height=80)
+                
+                giai_phap[linh_vuc] = {
+                    "hoat_dong": hoat_dong,
+                    "tan_suat": tan_suat,
+                    "nguoi_thuc_hien": nguoi_thuc_hien,
+                    "ghi_chu": ghi_chu
+                }
+        
+        st.divider()
+        
+        # ==== Thời gian theo dõi & đánh giá lại ====
+        st.markdown("### 📅 Theo dõi và đánh giá lại")
+        chu_ky_danh_gia = st.selectbox("Chu kỳ xem xét lại kế hoạch:",
+            ["Mỗi tháng", "Mỗi 2 tháng", "Mỗi quý", "Sau 6 tháng"])
+        ngay_danh_gia_lai = st.date_input("Ngày dự kiến xem xét lại kế hoạch:")
+        nguoi_phu_hop = st.text_area("Cách phối hợp giữa gia đình và trường:",
+            placeholder="Thông tin trao đổi, cách theo dõi chung...", height=100)
+        
+        st.divider()
+        
+        # ==== Xem trước & Lưu kế hoạch ====
+        if st.button("📄 Xem trước kế hoạch hoàn chỉnh"):
+            st.markdown("---")
+            st.markdown(f"""
+            # 📋 KẾ HOẠCH HỖ TRỢ PHÁT TRIỂN CÁ NHÂN
+            **Tên trẻ:** {ten_tre}  |  **Ngày sinh:** {ngay_sinh}  |  **Nhóm tuổi:** {tuoi_tre}
+            **Ngày lập:** {ngay_lap}  |  **Người lập:** {nguoi_lap}
+            
+            ---
+            
+            ## 💪 Điểm mạnh của trẻ
+            {diem_manh or '*Chưa ghi nhận*'}
+            
+            ---
+            
+            ## 🔍 Lĩnh vực cần hỗ trợ thêm
+            {', '.join(linh_vuc_can_ho_tro) or '*Chưa chọn lĩnh vực*'}
+            
+            **Mô tả khó khăn:**
+            {mo_ta_kho_khan or '*Chưa mô tả chi tiết*'}
+            
+            ---
+            
+            ## 🎯 Mục tiêu hỗ trợ
+            **Mục tiêu ngắn hạn (1–3 tháng):**
+            {muc_tieu_ngan_han or '*Chưa đặt mục tiêu*'}
+            
+            **Mục tiêu dài hạn (6–12 tháng):**
+            {muc_tieu_dai_han or '*Chưa đặt mục tiêu*'}
+            
+            ---
+            
+            ## 🛠️ Giải pháp hỗ trợ cụ thể
+            """)
+            
+            for lv, thong_tin in giai_phap.items():
+                st.markdown(f"""
+                **📌 {lv}**
+                - *Hoạt động:* {thong_tin['hoat_dong'] or '*Chưa mô tả*'}
+                - *Tần suất:* {thong_tin['tan_suat']}
+                - *Người thực hiện:* {thong_tin['nguoi_thuc_hien'] or '*Chưa chỉ định*'}
+                - *Ghi chú:* {thong_tin['ghi_chu'] or '*Không có*'}
+                """)
+            
+            st.markdown(f"""
+            ---
+            
+            ## 📅 Theo dõi và đánh giá lại
+            - **Chu kỳ xem xét lại:** {chu_ky_danh_gia}
+            - **Ngày dự kiến xem xét lại:** {ngay_danh_gia_lai.strftime('%d/%m/%Y')}
+            - **Phối hợp gia đình – trường:**
+            {nguoi_phu_hop or '*Chưa ghi nhận*'}
+            
+            ---
+            **Ký xác nhận:**
+            Người lập kế hoạch: _______________  Ngày: _______________
+            Phụ huynh/Đại diện gia đình: _______________  Ngày: _______________
+            """)
+            st.markdown("---")
+        
+        if st.button("💾 Lưu kế hoạch vào lịch sử"):
+            ke_hoach = {
+                "ngay": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "loai": "Kế hoạch hỗ trợ cá nhân",
+                "ten_tre": ten_tre,
+                "tuoi": tuoi_tre,
+                "nguoi_lap": nguoi_lap,
+                "diem_manh": diem_manh,
+                "linh_vuc_can_ho_tro": linh_vuc_can_ho_tro,
+                "mo_ta_kho_khan": mo_ta_kho_khan,
+                "muc_tieu_ngan_han": muc_tieu_ngan_han,
+                "muc_tieu_dai_han": muc_tieu_dai_han,
+                "giai_phap": giai_phap,
+                "chu_ky_danh_gia": chu_ky_danh_gia,
+                "ngay_danh_gia_lai": ngay_danh_gia_lai.strftime("%d/%m/%Y"),
+                "phoi_hop": nguoi_phu_hop
+            }
+            st.session_state.lich_su_danh_gia.append(ke_hoach)
+            st.success("✅ Đã lưu kế hoạch thành công! Xem tại tab 'Lịch sử đánh giá' nhé! 🎉")
 
 # ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
 elif tab_chon == "🎮 Tài nguyên trò chơi":
