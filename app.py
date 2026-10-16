@@ -239,27 +239,27 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
     if not st.session_state.tre_hien_tai:
         st.info("👈 Vui lòng nhập thông tin trẻ ở thanh bên trái trước khi đánh giá!")
     else:
-        tre = st.session_state.tre_hien_tai
-        st.subheader(f"📋 Đánh giá ASQ-3 cho: {tre['ten']} — {tre['tuoi']}")
-        ngay_dg = tre.get('ngay_danh_gia', tre.get('ngay_tao', 'Không có ngày'))
-nguoi_dg = tre.get('nguoi_danh_gia', tre.get('nguoi_danh_gia', 'Không có thông tin'))
-st.caption(f"Ngày: {ngay_dg} | Người đánh giá: {nguoi_dg}")
-        
-        tong_diem = {}
-        for linh_vuc, danh_sach_cau in cau_hoi_asq3.items():
-            st.markdown(f"### ✅ {linh_vuc} (6 câu)")
-            st.caption("Trả lời dựa trên quan sát thực tế của trẻ trong 1–2 tháng qua:")
-            
-            diem_linh_vuc = 0
-            for so_thu_tu, cau_hoi in enumerate(danh_sach_cau, 1):
-                st.markdown(f"**Câu {so_thu_tu}/6:** {cau_hoi['cau']}")
-                st.caption(f"💡 {cau_hoi['mo_ta']}")
-                
-                lua_chon = st.radio(
-                    label=f"Đáp án {so_thu_tu}",
-                    options=["Có", "Đôi khi", "Chưa"],
-                    key=f"asq3_{linh_vuc}_{so_thu_tu}",
-                    index=2,
+       tre = st.session_state.tre_hien_tai
+    st.subheader(f"📋 Đánh giá ASQ-3 cho: {tre['ten']} — {tre['tuoi']}")
+    ngay_dg = tre.get('ngay_danh_gia', tre.get('ngay_tao', 'Không có ngày'))
+    nguoi_dg = tre.get('nguoi_danh_gia', tre.get('nguoi_danh_gia', 'Không có thông tin'))
+    st.caption(f"Ngày: {ngay_dg} | Người đánh giá: {nguoi_dg}")
+
+    tong_diem = {}
+    for linh_vuc, danh_sach_cau in cau_hoi_asq3.items():
+        st.markdown(f"### ✅ {linh_vuc} (6 câu)")
+        st.caption("Trả lời dựa trên quan sát thực tế của trẻ trong 1-2 tháng qua:")
+
+        diem_linh_vuc = 0
+        for so_thu_tu, cau_hoi in enumerate(danh_sach_cau, 1):
+            st.markdown(f"**Câu {so_thu_tu}/6:** {cau_hoi['cau']}")
+            st.caption(f"💡 {cau_hoi['mo_ta']}")
+
+            lua_chon = st.radio(
+                label=f"Đáp án {so_thu_tu}",
+                options=["Có", "Đôi khi", "Chưa"],
+                key=f"asq3_{linh_vuc}_{so_thu_tu}",
+                index=2
                     horizontal=True
                 )
                 
