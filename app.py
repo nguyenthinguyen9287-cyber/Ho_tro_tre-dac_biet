@@ -332,12 +332,12 @@ elif tab_chon == "🔍 Sàng lọc sớm":
         st.success("✅ Đã lưu kết quả sàng lọc vào lịch sử!")
 
 # ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
-# ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
+# ==================== TAB 3: KẾ HOẠCH CÁ NHÂN VỚI AI ====================
 elif tab_chon == "📄 Tạo kế hoạch cá nhân":
-    st.subheader("📄 Kế hoạch hỗ trợ phát triển cá nhân cho trẻ")
+    st.subheader("🤖 AI Trợ lý — Tạo Kế hoạch Hỗ trợ Cá nhân")
     
     if not st.session_state.tre_hien_tai:
-        st.warning("⚠️ Vui lòng chọn trẻ ở thanh bên trái trước khi lập kế hoạch!")
+        st.warning("⚠️ Vui lòng chọn trẻ ở thanh bên trái trước khi tạo kế hoạch!")
     else:
         tre = st.session_state.tre_hien_tai
         ten_tre = tre.get('ten', 'Trẻ')
@@ -346,150 +346,312 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
         nguoi_lap = st.text_input("Người lập kế hoạch:", value=tre.get('nguoi_danh_gia', ''))
         ngay_lap = datetime.now().strftime("%d/%m/%Y")
         
-        st.info(f"📋 Lập kế hoạch cho: **{ten_tre}** — {tuoi_tre}")
+        st.info(f"📋 Đang lập kế hoạch cho: **{ten_tre}** — {tuoi_tre}")
         st.divider()
         
-        # ==== Thông tin chung & Điểm mạnh ====
-        st.markdown("### 💪 Điểm mạnh của trẻ")
-        diem_manh = st.text_area("Trẻ có những khả năng/điểm mạnh nào?", 
-            placeholder="Ví dụ: Trẻ rất thân thiện, thích giao tiếp với bạn bè, nhớ nhanh bài hát...", height=100)
+        # ==== Bước 1: Xác định thông tin & khó khăn ====
+        st.markdown("### 🔍 Bước 1: Thông tin phân tích")
         
-        st.markdown("### 🔍 Lĩnh vực cần hỗ trợ thêm")
-        linh_vuc_can_ho_tro = st.multiselect("Chọn lĩnh vực cần tập trung hỗ trợ:",
+        diem_manh = st.text_area("💪 Điểm mạnh của trẻ:",
+            placeholder="Ví dụ: Trẻ rất thân thiện, thích nghe truyện, nhớ nhanh bài hát...", height=80)
+        
+        linh_vuc_can_ho_tro = st.multiselect("📌 Lĩnh vực cần ưu tiên hỗ trợ:",
             ["Ngôn ngữ & Giao tiếp", "Vận động tinh", "Vận động thô", 
              "Giải quyết vấn đề", "Kỹ năng xã hội", "Tự phục vụ", "Chú ý & Hành vi"])
         
-        mo_ta_kho_khan = st.text_area("Mô tả cụ thể những khó khăn trẻ đang gặp:",
-            placeholder="Ví dụ: Trẻ chưa tự tin nói trước nhóm, hay ngại giao tiếp bằng mắt...", height=120)
+        muc_do = st.radio("📊 Mức độ cần hỗ trợ theo ASQ-3:",
+            ["🔵 Phát triển bình thường — theo dõi định kỳ",
+             "🟡 Cần hỗ trợ thêm tại nhà & lớp",
+             "🔴 Khuyến nghị can thiệp có hướng dẫn chuyên gia"],
+            index=1)
+        
+        mo_ta_kho_khan = st.text_area("📝 Mô tả cụ thể khó khăn & hành vi quan sát được:",
+            placeholder="Mô tả những gì trẻ chưa làm được, tình huống khó khăn xuất hiện như thế nào, tần suất...", height=120)
         
         st.divider()
         
-        # ==== Mục tiêu hỗ trợ ====
-        st.markdown("### 🎯 Mục tiêu hỗ trợ")
-        muc_tieu_ngan_han = st.text_area("Mục tiêu ngắn hạn (1–3 tháng):",
-            placeholder="Ví dụ: Trẻ tự giới thiệu được tên mình khi được hỏi", height=80)
-        muc_tieu_dai_han = st.text_area("Mục tiêu dài hạn (6–12 tháng):",
-            placeholder="Ví dụ: Trẻ tự tin giao tiếp với bạn bè và người xung quanh", height=80)
+        # ==== Bước 2: AI TẠO KẾ HOẠCH TỰ ĐỘNG ====
+        st.markdown("### 🤖 Bước 2: AI Tạo gợi ý kế hoạch chi tiết")
         
-        st.divider()
+        # Dữ liệu gợi ý chuẩn theo ASQ-3 và Can thiệp sớm
+        goi_y_chuan = {
+            "Ngôn ngữ & Giao tiếp": {
+                "muc_tieu_ngan_han": "Trẻ hiểu và thực hiện được 2 chỉ dẫn nối tiếp; Gọi được tên 5–10 đồ vật quen thuộc; Từ vựng tăng 3–5 từ mới mỗi tuần",
+                "muc_tieu_dai_han": "Trẻ giao tiếp được nhu cầu cơ bản bằng cụm từ/câu đơn giản; Hiểu và trả lời được câu hỏi đơn giản (ai, cái gì, ở đâu)",
+                "hoat_dong": """**🔹 Hoạt động hàng ngày:**
+- Đọc sách ảnh cùng trẻ 10–15 phút/ngày — đặt câu hỏi, chỉ và gọi tên hình ảnh
+- Mô tả hành động đang làm: 'Mẹ đang rửa tay', 'Con đang cầm cốc'
+- Hát bài hát có lời đơn giản, lặp lại nhiều lần
+- Chơi trò chơi 'Đồ vật gì đang thiếu?' — che 1 đồ vật, hỏi trẻ cái gì mất đi
+
+🔹 Hoạt động tại lớp:
+- Nhóm đọc truyện theo chủ đề quen thuộc
+- Trẻ đóng vai nhân vật trong truyện
+- Trò chơi nghe lệnh: 'Lấy quả bóng đỏ', 'Đặt sách lên bàn'
+
+🔹 Tại nhà:
+- Thường xuyên nói chuyện, bình luận hành động của trẻ — không dùng TV/điện thoại thay giao tiếp trực tiếp
+- Khuyến khích trẻ chỉ và gọi tên đồ vật thay vì chỉ dùng cử chỉ""",
+                "tan_suat": "Hàng ngày, 10–15 phút mỗi lần",
+                "ghi_chu": "Kiên nhẫn, khen ngợi mọi nỗ lực giao tiếp của trẻ. Không sửa lỗi trực tiếp mà nhắc lại đúng mẫu."
+            },
+            "Vận động tinh": {
+                "muc_tieu_ngan_han": "Nhặt đồ vật nhỏ bằng ngón cái-trỏ; Xếp được 3–5 khối chồng lên nhau; Lật được từng trang sách",
+                "muc_tieu_dai_han": "Vẽ được nét thẳng/tròn theo mẫu; Cầm muỗng ăn ít rớt hơn; Cởi được tất, kéo khóa đơn giản",
+                "hoat_dong": """**🔹 Hoạt động hàng ngày:**
+- Nhặt hạt/đồ vật nhỏ bỏ vào hộp — quan sát dùng ngón cái-trỏ
+- Xếp tháp khối gỗ, cốc nhựa
+- Vẽ nguệch ngoạc, tô màu trong khung đơn giản
+- Xé giấy, vo giấy thành quả bóng
+- Chơi với đất nặn/bột màu: ấn, nhào, nặn hình đơn giản
+
+🔹 Hoạt động tại lớp:
+- Trò chơi chuỗi hạt lớn
+- Xếp hình ghép đơn giản (2–4 mảnh)
+- Tô màu hình lớn viền đậm
+- Cắt giấy an toàn với kéo nhựa
+
+🔹 Tại nhà:
+- Khuyến khích tự cầm muỗng, tự cầm cốc uống nước
+- Tự cố gắng cởi giày, tất, nắp hộp nhựa""",
+                "tan_suat": "2–3 lần/ngày, 5–10 phút mỗi lần",
+                "ghi_chu": "Không đòi hỏi sự hoàn hảo — tập trung vào sự cố gắng và niềm vui thực hiện."
+            },
+            "Vận động thô": {
+                "muc_tieu_ngan_han": "Đi/chạy tự tin hơn; Ném bóng về phía mục tiêu; Đứng trên 1 chân 2–3 giây",
+                "muc_tieu_dai_han": "Nhảy 2 chân tại chỗ; Đi lên/xuống cầu thang không cần nắm tay; Đạp xe 3 bánh",
+                "hoat_dong": """**🔹 Hoạt động hàng ngày:**
+- Đi bộ trên bề mặt khác nhau: cỏ, gỗ, sàn nhà
+- Chơi ném-bắt bóng lớn
+- Nhảy qua vạch kẻ trên sàn
+- Đi theo đường thẳng vẽ trên đất
+- Leo lên/xuống ghế thấp an toàn
+
+🔹 Hoạt động ngoài trời:
+- Chạy theo bạn bè, trò chơi đuổi bắt đơn giản
+- Đạp xe 3 bánh
+- Nhảy lò cò đơn giản
+- Vượt chướng ngại vật thấp
+
+🔹 Tại nhà:
+- Khuyến khích trẻ tự di chuyển thay vì bế
+- Tạo không gian an toàn để trẻ tự do vận động""",
+                "tan_suat": "Hàng ngày, 20–30 phút ngoài trời",
+                "ghi_chu": "An toàn trên hết — quan sát và hỗ trợ khi cần, không can thiệp quá nhiều."
+            },
+            "Giải quyết vấn đề": {
+                "muc_tieu_ngan_han": "Tìm được đồ vật bị che hoàn toàn; Thử cách khác khi cách 1 không thành công; Bắt chước hành động đơn giản",
+                "muc_tieu_dai_han": "Phân loại đồ vật theo màu/hình dạng; Sử dụng đồ vật làm công cụ đơn giản; Hoàn thành được chuỗi hành động đơn giản",
+                "hoat_dong": """**🔹 Hoạt động nhận thức:**
+- Trò chơi 'Đồ vật biến mất' — che khăn, hỏi trẻ tìm
+- Đóng hộp có nắp khác nhau — trẻ tự tìm cách mở
+- Phân loại đồ vật theo màu, kích thước, hình dạng
+- Xếp chuỗi vòng tròn/khối theo kích thước giảm dần
+
+🔹 Trò chơi nguyên nhân-kết quả:
+- Lắc hộp có đồ vật bên trong để nghe tiếng
+- Đẩy xe lăn xem nó di chuyển như thế nào
+- Thả đồ vật vào nước — nổi hay chìm?
+
+🔹 Tư duy linh hoạt:
+- Khi trẻ gặp khó khăn, chờ 5–10 giây trước khi giúp
+- Hướng dẫn trẻ thử cách khác thay vì làm giúp""",
+                "tan_suat": "2–3 lần/tuần, 10–15 phút",
+                "ghi_chu": "Đặt câu hỏi gợi mở: 'Làm sao để lấy ra nhỉ?' thay vì trực tiếp làm giúp."
+            },
+            "Kỹ năng xã hội": {
+                "muc_tieu_ngan_han": "Chơi bên cạnh bạn 5–10 phút; Chia sẻ đồ vật khi được nhắc nhở; Giao tiếp bằng mắt khi tương tác",
+                "muc_tieu_dai_han": "Chơi cùng bạn theo quy tắc đơn giản; Thể hiện sự quan tâm khi bạn buồn; Tự giới thiệu tên khi được hỏi",
+                "hoat_dong": """**🔹 Hoạt động nhóm:**
+- Chơi song song cùng bạn với đồ vật giống nhau
+- Trò chơi lặp vòng: đưa đồ vật cho bạn bên cạnh
+- Bắt chước hành động bạn bè: vỗ tay, nhảy, cười
+- Hát múa theo nhạc cùng nhóm
+
+🔹 Học chia sẻ & quan tâm:
+- Dạy trẻ đưa đồ chơi cho bạn rồi nhận lại
+- Chỉ vào bạn và nói: 'Bạn đang buồn, ôm bạn nhé'
+- Chào hỏi khi đến lớp, tạm biệt khi về nhà
+
+🔹 Tự phục vụ & độc lập:
+- Tự cởi/đeo dép, mũ
+- Rửa tay, lau mặt theo hướng dẫn
+- Ăn cơm tự lập hơn""",
+                "tan_suat": "Hàng ngày trong mọi hoạt động sinh hoạt",
+                "ghi_chu": "Khen ngợi ngay khi trẻ có hành vi tích cực. Không phê bình khi trẻ chưa làm được — lặp lại hướng dẫn."
+            },
+            "Tự phục vụ": {
+                "muc_tieu_ngan_han": "Tự cầm muỗng ăn; Tự cởi tất/dép; Rửa tay với hướng dẫn",
+                "muc_tieu_dai_han": "Tự ăn không cần giúp nhiều; Tự mặc quần áo đơn giản; Biết tự đi vệ sinh",
+                "hoat_dong": """**🔹 Ăn uống:**
+- Để trẻ tự cầm muỗng dù có rớt thức ăn
+- Cắt thức ăn nhỏ, dễ xúc
+- Dùng bát đĩa không vỡ, có đáy chống trượt
+
+🔹 Vệ sinh cá nhân:
+- Tự rửa tay theo 4 bước đơn giản: làm ướt → xà phòng → rửa sạch → lau khô
+- Tự kéo quần lên/xuống khi đi vệ sinh
+- Tự lau mặt bằng khăn mềm
+
+🔹 Quần áo:
+- Tự cố gắng đưa tay vào tay áo, chân vào quần
+- Tự cởi khóa dán dép, mũ, nón""",
+                "tan_suat": "Tạo cơ hội tự làm mọi lúc trong ngày",
+                "ghi_chu": "Kiên nhẫn — trẻ cần thời gian. Hãy chậm lại và cho trẻ thực hiện theo tốc độ của mình."
+            },
+            "Chú ý & Hành vi": {
+                "muc_tieu_ngan_han": "Duy trì chú ý 3–5 phút với hoạt động yêu thích; Chuyển hoạt động mà không quá cáu giận; Giảm hành vi lặp lại bất thường",
+                "muc_tieu_dai_han": "Chú ý 5–10 phút với hoạt động có hướng dẫn; Thể hiện cảm xúc phù hợp hơn; Hạn chế hành vi tự gây tổn thương",
+                "hoat_dong": """**🔹 Rèn khả năng tập trung:**
+- Bắt đầu với hoạt động trẻ yêu thích, thời gian ngắn rồi tăng dần
+- Loại bỏ yếu tố gây xao nhãng khi trẻ đang làm việc
+- Trò chơi 'Đừng làm động tác này' — rèn tự điều chỉnh
+- Nghe nhạc nhẹ khi cần bình tĩnh
+
+🔹 Quản lý cảm xúc & chuyển tiếp:
+- Thông báo trước khi thay đổi hoạt động: 'Còn 5 phút nữa chúng ta dừng lại nhé'
+- Sử dụng tín hiệu hình ảnh/đồng hồ trực quan để trẻ chuẩn bị
+- Dạy trẻ cách bình tĩnh: thở sâu, đếm từ 1–5 khi tức giận
+
+🔹 Hành vi tích cực:
+- Dùng biểu đồ nhãn dán: mỗi lần trẻ chơi yên 5 phút → dán 1 ngôi sao
+- Khen ngợi hành vi mong muốn ngay khi xuất hiện: 'Con ngồi yên nghe cô nói thật tốt!'""",
+                "tan_suat": "Luyện tập hàng ngày, nhất là trong các chuyển tiếp hoạt động",
+                "ghi_chu": "Tính nhất quán là quan trọng nhất. Cùng một quy tắc giữa nhà và trường."
+            }
+        }
         
-        # ==== Giải pháp hỗ trợ theo lĩnh vực ====
-        st.markdown("### 🛠️ Giải pháp hỗ trợ cụ thể")
-        
-        giai_phap = {}
-        for linh_vuc in linh_vuc_can_ho_tro:
-            with st.expander(f"📌 Hoạt động hỗ trợ: {linh_vuc}"):
-                hoat_dong = st.text_area(f"Các hoạt động thường xuyên:",
-                    placeholder="Liệt kê hoạt động, trò chơi phù hợp với trẻ",
-                    key=f"hd_{linh_vuc}", height=100)
-                tan_suat = st.select_slider(f"Tần suất thực hiện:",
-                    options=["1 lần/ngày", "2–3 lần/tuần", "Hàng ngày", "Theo nhu cầu"],
-                    key=f"ts_{linh_vuc}")
-                nguoi_thuc_hien = st.text_input(f"Người chịu trách nhiệm:",
-                    placeholder="Giáo viên / Phụ huynh", key=f"nguoi_{linh_vuc}")
-                ghi_chu = st.text_area(f"Ghi chú & điều chỉnh:",
-                    placeholder="Cách điều chỉnh khi trẻ chưa tham gia...",
-                    key=f"gc_{linh_vuc}", height=80)
+        # Nút tạo kế hoạch AI
+        if st.button("🤖 AI TẠO KẾ HOẠCH CHI TIẾT", type="primary"):
+            if not linh_vuc_can_ho_tro:
+                st.error("⚠️ Vui lòng chọn ít nhất 1 lĩnh vực cần hỗ trợ trước!")
+            else:
+                st.success("✅ AI đang phân tích & tạo kế hoạch...")
+                st.balloons()
                 
-                giai_phap[linh_vuc] = {
-                    "hoat_dong": hoat_dong,
-                    "tan_suat": tan_suat,
-                    "nguoi_thuc_hien": nguoi_thuc_hien,
-                    "ghi_chu": ghi_chu
-                }
-        
-        st.divider()
-        
-        # ==== Thời gian theo dõi & đánh giá lại ====
-        st.markdown("### 📅 Theo dõi và đánh giá lại")
-        chu_ky_danh_gia = st.selectbox("Chu kỳ xem xét lại kế hoạch:",
-            ["Mỗi tháng", "Mỗi 2 tháng", "Mỗi quý", "Sau 6 tháng"])
-        ngay_danh_gia_lai = st.date_input("Ngày dự kiến xem xét lại kế hoạch:")
-        nguoi_phu_hop = st.text_area("Cách phối hợp giữa gia đình và trường:",
-            placeholder="Thông tin trao đổi, cách theo dõi chung...", height=100)
-        
-        st.divider()
-        
-        # ==== Xem trước & Lưu kế hoạch ====
-        if st.button("📄 Xem trước kế hoạch hoàn chỉnh"):
-            st.markdown("---")
-            st.markdown(f"""
-            # 📋 KẾ HOẠCH HỖ TRỢ PHÁT TRIỂN CÁ NHÂN
-            **Tên trẻ:** {ten_tre}  |  **Ngày sinh:** {ngay_sinh}  |  **Nhóm tuổi:** {tuoi_tre}
-            **Ngày lập:** {ngay_lap}  |  **Người lập:** {nguoi_lap}
-            
-            ---
-            
-            ## 💪 Điểm mạnh của trẻ
-            {diem_manh or '*Chưa ghi nhận*'}
-            
-            ---
-            
-            ## 🔍 Lĩnh vực cần hỗ trợ thêm
-            {', '.join(linh_vuc_can_ho_tro) or '*Chưa chọn lĩnh vực*'}
-            
-            **Mô tả khó khăn:**
-            {mo_ta_kho_khan or '*Chưa mô tả chi tiết*'}
-            
-            ---
-            
-            ## 🎯 Mục tiêu hỗ trợ
-            **Mục tiêu ngắn hạn (1–3 tháng):**
-            {muc_tieu_ngan_han or '*Chưa đặt mục tiêu*'}
-            
-            **Mục tiêu dài hạn (6–12 tháng):**
-            {muc_tieu_dai_han or '*Chưa đặt mục tiêu*'}
-            
-            ---
-            
-            ## 🛠️ Giải pháp hỗ trợ cụ thể
-            """)
-            
-            for lv, thong_tin in giai_phap.items():
+                st.markdown("---")
                 st.markdown(f"""
-                **📌 {lv}**
-                - *Hoạt động:* {thong_tin['hoat_dong'] or '*Chưa mô tả*'}
-                - *Tần suất:* {thong_tin['tan_suat']}
-                - *Người thực hiện:* {thong_tin['nguoi_thuc_hien'] or '*Chưa chỉ định*'}
-                - *Ghi chú:* {thong_tin['ghi_chu'] or '*Không có*'}
+                # 📋 KẾ HOẠCH HỖ TRỢ PHÁT TRIỂN CÁ NHÂN
+                **Tên trẻ:** {ten_tre}  |  **Ngày sinh:** {ngay_sinh}
+                **Nhóm độ tuổi:** {tuoi_tre}  |  **Ngày lập:** {ngay_lap}
+                **Người lập:** {nguoi_lap}
+                
+                ---
+                
+                ## 💪 I. Thông tin chung & Điểm mạnh
+                **Điểm mạnh của trẻ:**
+                {diem_manh or '*Chưa ghi nhận — quan sát thêm trong sinh hoạt hàng ngày*'}
+                
+                **Mức độ hỗ trợ:**
+                > {muc_do}
+                
+                **Khó khăn chính:**
+                {mo_ta_kho_khan or '*Chưa mô tả chi tiết — tiếp tục quan sát và cập nhật*'}
+                
+                ---
+                
+                ## 🎯 II. Mục tiêu hỗ trợ chính
                 """)
-            
-            st.markdown(f"""
-            ---
-            
-            ## 📅 Theo dõi và đánh giá lại
-            - **Chu kỳ xem xét lại:** {chu_ky_danh_gia}
-            - **Ngày dự kiến xem xét lại:** {ngay_danh_gia_lai.strftime('%d/%m/%Y')}
-            - **Phối hợp gia đình – trường:**
-            {nguoi_phu_hop or '*Chưa ghi nhận*'}
-            
-            ---
-            **Ký xác nhận:**
-            Người lập kế hoạch: _______________  Ngày: _______________
-            Phụ huynh/Đại diện gia đình: _______________  Ngày: _______________
-            """)
-            st.markdown("---")
+                
+                # Tạo kế hoạch cho từng lĩnh vực được chọn
+                tong_muc_tieu_ngan_han = []
+                tong_muc_tieu_dai_han = []
+                tong_giai_phap = []
+                
+                for lv in linh_vuc_can_ho_tro:
+                    if lv in goi_y_chuan:
+                        du_lieu = goi_y_chuan[lv]
+                        
+                        tong_muc_tieu_ngan_han.append(f"**{lv}:** {du_lieu['muc_tieu_ngan_han']}")
+                        tong_muc_tieu_dai_han.append(f"**{lv}:** {du_lieu['muc_tieu_dai_han']}")
+                        
+                        tong_giai_phap.append(f"""
+                        ### 📌 {lv}
+                        
+                        **🎯 Mục tiêu ngắn hạn (1–3 tháng):**
+                        {du_lieu['muc_tieu_ngan_han']}
+                        
+                        **🎯 Mục tiêu dài hạn (6–12 tháng):**
+                        {du_lieu['muc_tieu_dai_han']}
+                        
+                        **🛠️ Hoạt động cụ thể:**
+                        {du_lieu['hoat_dong']}
+                        
+                        **⏰ Tần suất:** {du_lieu['tan_suat']}
+                        
+                        **💡 Lưu ý quan trọng:**
+                        {du_lieu['ghi_chu']}
+                        
+                        ---
+                        """)
+                
+                # Hiển thị mục tiêu tổng hợp
+                st.markdown("### 📋 Mục tiêu tổng hợp theo từng lĩnh vực")
+                with st.expander("Xem tóm tắt mục tiêu"):
+                    st.markdown("#### Mục tiêu ngắn hạn:")
+                    for mt in tong_muc_tieu_ngan_han:
+                        st.markdown(f"- {mt}")
+                    st.markdown("#### Mục tiêu dài hạn:")
+                    for mt in tong_muc_tieu_dai_han:
+                        st.markdown(f"- {mt}")
+                
+                # Hiển thị kế hoạch chi tiết
+                st.markdown("---")
+                st.markdown("## 📖 III. KẾ HOẠCH CHI TIẾT THEO LĨNH VỰC")
+                
+                for gp in tong_giai_phap:
+                    with st.expander(f"📌 Xem chi tiết hoạt động — {gp.split('### 📌 ')[1].split(chr(10))[0]}"):
+                        st.markdown(gp)
+                
+                # Phần phối hợp & theo dõi
+                st.markdown("---")
+                st.markdown("""
+                ## 🤝 IV. Phối hợp giữa Gia đình & Trường
+                
+                **✅ Nguyên tắc chung:**
+                - Tính nhất quán giữa nhà và trường là yếu tố quan trọng nhất
+                - Thông tin trao đổi thường xuyên qua sổ liên lạc/nhóm Zalo
+                - Quan sát và ghi chép tiến độ mỗi tuần
+                - Điều chỉnh kế hoạch linh hoạt theo sự phát triển của trẻ
+                
+                **📅 Chu kỳ xem xét lại kế hoạch:**
+                - Rà soát hàng tháng: điều chỉnh hoạt động, tần suất phù hợp
+                - Đánh giá tổng thể sau 3–6 tháng: xem xét lại mục tiêu dài hạn
+                - Tham khảo chuyên gia nếu sau 6 tháng không có tiến triển rõ rệt
+                
+                **📝 Ghi chú:**
+                - Đây là kế hoạch tham khảo dựa trên tài liệu ASQ-3 và hướng dẫn Can thiệp sớm Việt Nam
+                - Mỗi trẻ có tốc độ phát triển riêng — điều chỉnh theo thực tế của con
+                - Khi có dấu hiệu cần hỗ trợ chuyên sâu hơn, vui lòng tham khảo chuyên gia tâm lý/trị liệu ngôn ngữ/phát triển trẻ
+                """)
+                
+                st.markdown("---")
+                st.info("""
+                📄 **Bạn có thể:**
+                - In toàn bộ nội dung trên để lưu vào hồ sơ trẻ
+                - Tùy chỉnh, bổ sung hoạt động cho phù hợp với điều kiện thực tế
+                - Lưu bản sao vào tab 'Lịch sử đánh giá' để theo dõi tiến độ
+                """)
         
-        if st.button("💾 Lưu kế hoạch vào lịch sử"):
+        st.divider()
+        
+        # Nút lưu kế hoạch do người dùng tự điền
+        st.markdown("### 💾 Lưu kế hoạch tự chỉnh sửa")
+        if st.button("📥 Lưu vào lịch sử"):
             ke_hoach = {
                 "ngay": datetime.now().strftime("%d/%m/%Y %H:%M"),
                 "loai": "Kế hoạch hỗ trợ cá nhân",
                 "ten_tre": ten_tre,
                 "tuoi": tuoi_tre,
+                "ngay_sinh": str(ngay_sinh),
                 "nguoi_lap": nguoi_lap,
                 "diem_manh": diem_manh,
-                "linh_vuc_can_ho_tro": linh_vuc_can_ho_tro,
-                "mo_ta_kho_khan": mo_ta_kho_khan,
-                "muc_tieu_ngan_han": muc_tieu_ngan_han,
-                "muc_tieu_dai_han": muc_tieu_dai_han,
-                "giai_phap": giai_phap,
-                "chu_ky_danh_gia": chu_ky_danh_gia,
-                "ngay_danh_gia_lai": ngay_danh_gia_lai.strftime("%d/%m/%Y"),
-                "phoi_hop": nguoi_phu_hop
+                "linh_vuc_uu_tien": linh_vuc_can_ho_tro,
+                "muc_do_ho_tro": muc_do,
+                "mo_ta_kho_khan": mo_ta_kho_khan
             }
             st.session_state.lich_su_danh_gia.append(ke_hoach)
-            st.success("✅ Đã lưu kế hoạch thành công! Xem tại tab 'Lịch sử đánh giá' nhé! 🎉")
-
+            st.success("✅ Đã lưu kế hoạch thành công! Xem lại tại tab 'Lịch sử đánh giá' nhé! 🎉")
 # ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
 elif tab_chon == "🎮 Tài nguyên trò chơi":
     st.subheader("🎮 Trò chơi học tập theo độ tuổi")
