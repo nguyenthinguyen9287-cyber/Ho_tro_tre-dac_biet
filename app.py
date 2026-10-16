@@ -653,10 +653,343 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
             st.session_state.lich_su_danh_gia.append(ke_hoach)
             st.success("✅ Đã lưu kế hoạch thành công! Xem lại tại tab 'Lịch sử đánh giá' nhé! 🎉")
 # ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
+# ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
 elif tab_chon == "🎮 Tài nguyên trò chơi":
-    st.subheader("🎮 Trò chơi học tập theo độ tuổi")
-    st.info("Chức năng đang được phát triển. Vui lòng quay lại sau!")
+    st.subheader("🎮 Thư viện Trò chơi Học tập Mầm Non")
+    st.info("📚 Kho trò chơi theo độ tuổi và lĩnh vực phát triển — Dễ chuẩn bị, hiệu quả!")
+    
+    # ==== BỘ LỌC ====
+    col1, col2 = st.columns(2)
+    with col1:
+        loc_tuoi = st.selectbox("🔍 Chọn độ tuổi:",
+            ["Tất cả", "18–24 tháng", "25–36 tháng"])
+    with col2:
+        loc_linh_vuc = st.selectbox("📂 Chọn lĩnh vực:",
+            ["Tất cả", "Ngôn ngữ & Giao tiếp", "Vận động tinh", "Vận động thô",
+             "Giải quyết vấn đề", "Kỹ năng xã hội", "Tự phục vụ", "Âm nhạc & Nghệ thuật"])
+    
+    st.divider()
+    
+    # ==== DỮ LIỆU TRÒ CHƠI ====
+    danh_sach_tro_choi = [
+        # === 18–24 tháng ===
+        {
+            "ten": "🔊 Nghe và Lặp lại",
+            "tuoi": ["18–24 tháng"],
+            "linh_vuc": "Ngôn ngữ & Giao tiếp",
+            "muc_tieu": "Khuyến khích trẻ phát âm, bắt chước lời nói và tăng vốn từ",
+            "cach_choi": """**Chuẩn bị:**
+- Không cần đồ vật đặc biệt, có thể kết hợp với đồ vật trong nhà
 
+**Cách chơi:**
+1. Đối mặt với trẻ, nói từ đơn giản rõ ràng: 'Bóng', 'Nước', 'Ăn'
+2. Mỉm cười, chỉ vào đồ vật khi nói từ đó
+3. Khuyến khích trẻ bắt chước — dù chỉ phát âm một phần cũng khen ngợi
+4. Lặp lại nhiều lần, thay đổi ngữ điệu vui vẻ
+
+**Thời lượng:** 5–10 phút mỗi lần
+**Tần suất:** Hàng ngày, xen kẽ trong sinh hoạt
+**Lưu ý:** Không yêu cầu trẻ nói đúng hoàn toàn — quan trọng là sự cố gắng và niềm vui giao tiếp""",
+            "nguyen_lieu": "Không cần vật liệu đặc biệt",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        {
+            "ten": "✋ Nhặt Đồ Vật Nhỏ",
+            "tuoi": ["18–24 tháng"],
+            "linh_vuc": "Vận động tinh",
+            "muc_tieu": "Rèn kỹ năng nhặt vật bằng ngón cái và ngón trỏ, phối hợp tay-mắt",
+            "cach_choi": """**Chuẩn bị:**
+- Các vật an toàn, kích thước nhỏ: hạt nhựa lớn, nút áo to, quả bóng xốp nhỏ, nắp chai
+- Một cái hộp/khay trống
+
+**Cách chơi:**
+1. Đặt các vật ra khay, chỉ cho trẻ xem cách nhặt bằng ngón cái + ngón trỏ
+2. Khuyến khích trẻ nhặt từng vật bỏ vào hộp
+3. Khi trẻ làm được, khen ngợi nhiệt tình
+4. Tăng độ khó: gọi tên vật để trẻ nhặt đúng loại
+
+**Thời lượng:** 5–8 phút
+**Tần suất:** 2–3 lần/tuần
+**An toàn:** Luôn giám sát — tránh trẻ bỏ vào miệng""",
+            "nguyen_lieu": "Hạt nhựa/nút áo to, hộp/khay nhựa",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        {
+            "ten": "🚶 Đi theo Đường Kẻ",
+            "tuoi": ["18–24 tháng"],
+            "linh_vuc": "Vận động thô",
+            "muc_tieu": "Rèn thăng bằng, phối hợp chân và tự tin di chuyển",
+            "cach_choi": """**Chuẩn bị:**
+- Băng dính hoặc phấn vẽ một đường thẳng/đường cong trên sàn nhà
+
+**Cách chơi:**
+1. Bước đi trên đường kẻ — tay có thể dang ra để thăng bằng
+2. Đầu tiên người lớn nắm tay trẻ, sau đó từ từ nhả ra
+3. Hát bài hát đơn giản khi đi để tạo niềm vui
+4. Thử đi theo đường cong, đường vòng đơn giản
+
+**Thời lượng:** 10–15 phút
+**Tần suất:** 2–3 lần/tuần
+**Không gian:** Cần không gian sạch sẽ, bằng phẳng""",
+            "nguyen_lieu": "Băng dính/Phấn màu",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        {
+            "ten": "🙏 Tìm Đồ Vật Bị Che",
+            "tuoi": ["18–24 tháng"],
+            "linh_vuc": "Giải quyết vấn đề",
+            "muc_tieu": "Phát triển trí nhớ, tư duy tìm kiếm và sự kiên trì",
+            "cach_choi": """**Chuẩn bị:**
+- Một món đồ trẻ yêu thích, một chiếc khăn/miếng vải nhẹ
+
+**Cách chơi:**
+1. Cho trẻ xem rõ đồ vật
+2. Dùng khăn che hoàn toàn đồ vật trước mặt trẻ
+3. Hỏi: 'Đồ vật đâu rồi? Con tìm xem!'
+4. Khi trẻ tìm thấy, khen ngợi nhiệt tình: 'Con thông minh quá!'
+5. Tăng độ khó: che ở nhiều nơi khác nhau
+
+**Thời lượng:** 5–10 phút
+**Tần suất:** 2–3 lần/tuần""",
+            "nguyen_lieu": "Đồ vật quen thuộc, khăn vải nhẹ",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        {
+            "ten": "🤗 Chào Hỏi & Biểu Cảm",
+            "tuoi": ["18–24 tháng"],
+            "linh_vuc": "Kỹ năng xã hội",
+            "muc_tieu": "Hình thành thói quen giao tiếp thân thiện, nhận biết cảm xúc",
+            "cach_choi": """**Chuẩn bị:**
+- Không cần vật liệu — thực hiện trong giao tiếp hàng ngày
+
+**Cách chơi:**
+1. Khi gặp người: mỉm cười, vẫy tay nói 'Xin chào'
+2. Khi tạm biệt: vẫy tay nói 'Tạm biệt'
+3. Dạy trẻ ôm nhẹ khi gặp người thân
+4. Chỉ vào ảnh/người và nói: 'Bạn đang vui', 'Bạn đang buồn'
+
+**Thời lượng:** Thực hiện trong mọi tình huống hàng ngày
+**Tần suất:** Mọi lúc, mọi nơi""",
+            "nguyen_lieu": "Không cần vật liệu",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        
+        # === 25–36 tháng ===
+        {
+            "ten": "📖 Kể Truyện Theo Hình Ảnh",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Ngôn ngữ & Giao tiếp",
+            "muc_tieu": "Rèn khả năng diễn đạt, nối câu và tư duy logic",
+            "cach_choi": """**Chuẩn bị:**
+- Sách ảnh đơn giản hoặc bộ thẻ hình có trình tự sự việc
+
+**Cách chơi:**
+1. Xem từng hình, hỏi trẻ: 'Con thấy gì trong ảnh?'
+2. Khuyến khích trẻ nói bằng 2–3 từ: 'Đây là con chó', 'Chó đang chạy'
+3. Nối các hình thành một câu chuyện ngắn
+4. Để trẻ tự kể lại theo cách của mình
+
+**Thời lượng:** 10–15 phút
+**Tần suất:** 2–3 lần/tuần
+**Lưu ý:** Không sửa lỗi trực tiếp — nhắc lại đúng mẫu sau đó""",
+            "nguyen_lieu": "Sách ảnh/Thẻ hình đơn giản",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "🎨 Tô Màu & Vẽ Theo Mẫu",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Vận động tinh",
+            "muc_tieu": "Kiểm soát cử động tay-phát triển phối hợp tay-mắt, nhận biết màu sắc",
+            "cach_choi": """**Chuẩn bị:**
+- Giấy trắng, bút chì màu/sáp màu to dễ cầm
+- Hình vẽ sẵn nét viền đậm, kích thước lớn
+
+**Cách chơi:**
+1. Chỉ cho trẻ cách cầm bút đúng (không cần quá nghiêm ngặt)
+2. Tô màu trong khung — không yêu cầu đều màu
+3. Nêu tên màu sắc khi trẻ tô
+4. Vẽ theo mẫu đơn giản: đường thẳng, vòng tròn
+
+**Thời lượng:** 10–15 phút
+**Tần suất:** 2–3 lần/tuần
+**An toàn:** Dùng bút màu không độc hại, dễ rửa sạch""",
+            "nguyen_lieu": "Giấy, bút chì màu/bút sáp to",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "⚽ Đá & Ném Bóng",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Vận động thô",
+            "muc_tieu": "Phối hợp tay-chân, thăng bằng, định hướng không gian",
+            "cach_choi": """**Chuẩn bị:**
+- Bóng mềm, kích thước phù hợp với tay/trẻ
+
+**Cách chơi:**
+1. Ném bóng cho người khác — hai tay trước ngực
+2. Đá bóng nhẹ về phía trước — theo hướng chỉ định
+3. Chạy theo bóng rồi dừng lại an toàn
+4. Bắt bóng lớn với hai tay ôm
+
+**Thời lượng:** 15–20 phút
+**Tần suất:** Hàng ngày nếu có điều kiện
+**Không gian:** Ngoài trời hoặc phòng rộng, không vật cản nguy hiểm""",
+            "nguyen_lieu": "Bóng mềm kích thước trung bình",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "🧩 Phân Loại Đồ Vật",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Giải quyết vấn đề",
+            "muc_tieu": "Phát triển tư duy logic — phân loại theo màu sắc, hình dạng, kích thước",
+            "cach_choi": """**Chuẩn bị:**
+- Các đồ vật an toàn: khối gỗ, đồ chơi, nắp chai, thìa nhựa...
+- 2–3 cái hộp/khay khác màu nhau
+
+**Cách chơi:**
+1. Chia theo màu sắc: 'Đặt tất cả vật màu đỏ vào hộp này'
+2. Chia theo hình dạng: 'Đặt vật tròn vào đây, vật vuông vào kia'
+3. Chia theo chức năng: 'Đồ vật dùng để ăn ở đâu?'
+4. Khen ngợi khi trẻ làm đúng, nhẹ nhàng hướng dẫn khi chưa đúng
+
+**Thời lượng:** 10–15 phút
+**Tần suất:** 2–3 lần/tuần""",
+            "nguyen_lieu": "Đồ vật đa dạng, hộp/khay phân loại",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "🤝 Chia Sẻ & Chơi Cùng",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Kỹ năng xã hội",
+            "muc_tieu": "Học chơi cùng bạn, chờ đến lượt và chia sẻ đồ vật",
+            "cach_choi": """**Chuẩn bị:**
+- Nhóm 2–3 trẻ, bộ đồ chơi đủ chia sẻ
+
+**Cách chơi:**
+1. Ngồi thành vòng tròn, truyền đồ chơi cho bạn bên cạnh
+2. Hướng dẫn: 'Đến lượt con rồi', 'Chờ bạn xong đến lượt con'
+3. Khi trẻ chia sẻ, khen ngợi ngay: 'Con chia sẻ tốt quá!'
+4. Trò chơi luân phiên: lăn bóng cho bạn rồi nhận lại
+
+**Thời lượng:** 15–20 phút
+**Tần suất:** Hàng ngày trong hoạt động nhóm""",
+            "nguyen_lieu": "Đồ chơi nhóm, không cần vật liệu đặc biệt",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "🧦 Tự Mặc Quần Áo",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Tự phục vụ",
+            "muc_tieu": "Rèn sự độc lập, tự tin và kỹ năng tự chăm sóc bản thân",
+            "cach_choi": """**Chuẩn bị:**
+- Quần áo đơn giản của trẻ: dép, tất, áo có lỗ rộng, quần co giãn
+
+**Cách chơi:**
+1. Xem như một trò chơi thú vị, không tạo áp lực
+2. Hướng dẫn từng bước chậm rãi: tay vào tay áo, chân vào chân quần
+3. Để trẻ cố gắng trước — chỉ giúp khi trẻ thực sự cần
+4. Khen ngợi nỗ lực dù chưa hoàn hảo
+
+**Thời lượng:** Thực hiện mỗi sáng/chiều khi thay đồ
+**Tần suất:** Hàng ngày
+**Lưu ý:** Kiên nhẫn — trẻ cần nhiều thời gian hơn người lớn""",
+            "nguyen_lieu": "Quần áo, dép, tất của trẻ",
+            "do_kho": "⭐⭐ Trung bình"
+        },
+        {
+            "ten": "🎵 Nghe Nhạc & Vận Động",
+            "tuoi": ["18–24 tháng", "25–36 tháng"],
+            "linh_vuc": "Âm nhạc & Nghệ thuật",
+            "muc_tieu": "Phát triển thính giác, nhịp điệu, cảm xúc và phối hợp vận động",
+            "cach_choi": """**Chuẩn bị:**
+- Bài hát thiếu nhi có giai điệu vui, rõ nhịp điệu
+- Có thể dùng nhạc cụ đơn giản: trống nhựa, thanh gõ, lục lạc
+
+**Cách chơi:**
+1. Nghe nhạc — vỗ tay theo nhịp
+2. Di chuyển cơ thể theo nhạc: nhảy, xoay, vung tay
+3. Dùng nhạc cụ đơn giản tạo âm thanh cùng nhạc
+4. Bắt chước hành động trong bài hát
+
+**Thời lượng:** 10–15 phút
+**Tần suất:** Hàng ngày
+**Lưu ý:** Giữ âm lượng ở mức vừa phải, an toàn cho tai trẻ""",
+            "nguyen_lieu": "Nhạc thiếu nhi, nhạc cụ đơn giản (tùy chọn)",
+            "do_kho": "⭐ Dễ nhất"
+        },
+        {
+            "ten": "✂️ Xé & Dán Giấy",
+            "tuoi": ["25–36 tháng"],
+            "linh_vuc": "Vận động tinh + Sáng tạo",
+            "muc_tieu": "Rèn cơ ngón tay, sức bền tay và khả năng sáng tạo",
+            "cach_choi": """**Chuẩn bị:**
+- Giấy màu mềm, giấy vụn sạch
+- Keo dán an toàn, que chấm keo
+- Giấy trắng làm nền
+
+**Cách chơi:**
+1. Xé giấy thành các mảnh nhỏ theo ý muốn
+2. Chấm keo vào mặt sau mảnh giấy
+3. Dán lên giấy nền tạo thành hình ảnh đơn giản
+4. Nêu tên những gì trẻ tạo ra
+
+**Thời lượng:** 15–20 phút
+**Tần suất:** 1–2 lần/tuần
+**An toàn:** Giấy không quá nhỏ, không để trẻ bỏ vào miệng""",
+            "nguyen_lieu": "Giấy màu, keo dán an toàn, giấy nền",
+            "do_kho": "⭐⭐ Trung bình"
+        }
+    ]
+    
+    # ==== LỌC & HIỂN THỊ ====
+    tro_choi_loc = []
+    for tc in danh_sach_tro_choi:
+        loc_ok = True
+        if loc_tuoi != "Tất cả" and loc_tuoi not in tc["tuoi"]:
+            loc_ok = False
+        if loc_linh_vuc != "Tất cả" and tc["linh_vuc"] != loc_linh_vuc:
+            loc_ok = False
+        if loc_ok:
+            tro_choi_loc.append(tc)
+    
+    if tro_choi_loc:
+        st.success(f"✅ Tìm thấy {len(tro_choi_loc)} trò chơi phù hợp!")
+        
+        for i, tc in enumerate(tro_choi_loc, 1):
+            with st.expander(f"🎮 {i}. {tc['ten']} — {tc['linh_vuc']}"):
+                st.markdown(f"""
+                **👶 Độ tuổi:** {', '.join(tc['tuoi'])}  |  **{tc['do_kho']}**
+                
+                ### 🎯 Mục tiêu:
+                {tc['muc_tieu']}
+                
+                ### 📋 Nguyên liệu cần chuẩn bị:
+                {tc['nguyen_lieu']}
+                
+                ### 🎲 Cách chơi chi tiết:
+                {tc['cach_choi']}
+                """)
+    else:
+        st.info("🔍 Không tìm thấy trò chơi phù hợp. Vui lòng thay đổi bộ lọc!")
+    
+    st.divider()
+    
+    # ==== TẠO TRÒ CHƠI CỦA BẠN ====
+    st.markdown("### ✏️ Thêm trò chơi mới của bạn")
+    with st.form("form_them_tro_choi"):
+        ten_moi = st.text_input("Tên trò chơi:")
+        tuoi_moi = st.multiselect("Độ tuổi phù hợp:", ["18–24 tháng", "25–36 tháng"])
+        linh_vuc_moi = st.selectbox("Lĩnh vực phát triển:",
+            ["Ngôn ngữ & Giao tiếp", "Vận động tinh", "Vận động thô",
+             "Giải quyết vấn đề", "Kỹ năng xã hội", "Tự phục vụ", "Âm nhạc & Nghệ thuật"])
+        muc_tieu_moi = st.text_area("Mục tiêu phát triển:")
+        nguyen_lieu_moi = st.text_input("Nguyên liệu cần chuẩn bị:")
+        cach_choi_moi = st.text_area("Cách chơi chi tiết:")
+        
+        if st.form_submit_button("💾 Lưu trò chơi"):
+            if ten_moi and tuoi_moi:
+                st.success(f"✅ Đã lưu trò chơi: **{ten_moi}** — Bạn có thể thêm vào danh sách chính thức sau nhé!")
+            else:
+                st.warning("⚠️ Vui lòng nhập tên trò chơi và chọn độ tuổi!")
 # ==================== TAB 5: LỊCH SỬ ĐÁNH GIÁ ====================
 elif tab_chon == "📊 Lịch sử đánh giá":
     st.subheader("📊 Lịch sử đánh giá")
