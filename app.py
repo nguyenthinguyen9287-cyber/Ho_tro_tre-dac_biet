@@ -174,30 +174,56 @@ st.markdown("""
 
 # ==================== THANH BÊN TRÁI ====================
 with st.sidebar:
-    st.header("👶 Thông tin trẻ")
-    ten_tre = st.text_input("Tên trẻ:")
-    ngay_sinh = st.date_input("Ngày sinh:")
-    nhom_tuoi = st.selectbox("Nhóm độ tuổi:", [
-        "18–24 tháng",
-        "25–36 tháng"
-    ])
-    nguoi_danh_gia = st.text_input("Người đánh giá:")
-    ghi_chu = st.text_area("Ghi chú / Đặc điểm cần lưu ý:")
+    st.header("👶 Danh sách trẻ")
     
-    if st.button("💾 Lưu thông tin trẻ"):
-        if ten_tre:
-            tre_moi = {
-                "ten": ten_tre,
-                "ngay_sinh": ngay_sinh,
-                "tuoi": nhom_tuoi,
-                "nguoi_danh_gia": nguoi_danh_gia,
-                "ngay_danh_gia": datetime.now().strftime("%d/%m/%Y %H:%M"),
-                "ghi_chu": ghi_chu
-            }
-            st.session_state.tre_hien_tai = tre_moi
-            st.success(f"✅ Đã lưu: {ten_tre} — {nhom_tuoi}")
-        else:
-            st.warning("⚠️ Vui lòng nhập tên trẻ!")
+    # ==== THÊM TRẺ MỚI ====
+    with st.expander("➕ Thêm trẻ mới"):
+        ten_tre_moi = st.text_input("Tên trẻ:")
+        ngay_sinh_moi = st.date_input("Ngày sinh:")
+        nhom_tuoi_moi = st.selectbox("Nhóm độ tuổi:", ["18–24 tháng", "25–36 tháng"], key="tuoi_moi")
+        nguoi_danh_gia = st.text_input("Người đánh giá:")
+        ghi_chu = st.text_area("Ghi chú:")
+        
+        if st.button("💾 Lưu trẻ mới"):
+            if ten_tre_moi:
+                tre_moi = {
+                    "id": len(st.session_state.danh_sach_tre) + 1,
+                    "ten": ten_tre_moi,
+                    "ngay_sinh": ngay_sinh_moi,
+                    "tuoi": nhom_tuoi_moi,
+                    "nguoi_danh_gia": nguoi_danh_gia,
+                    "ngay_tao": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                    "ghi_chu": ghi_chu
+                }
+                st.session_state.danh_sach_tre.append(tre_moi)
+                st.success(f"✅ Đã thêm: {ten_tre_moi}")
+                st.rerun()
+            else:
+                st.warning("⚠️ Nhập tên trẻ trước khi lưu!")
+    
+    # ==== CHỌN TRẺ ĐỂ LÀM VIỆC ====
+    st.subheader("📋 Chọn trẻ đã lưu")
+    if st.session_state.danh_sach_tre:
+        danh_sach_ten = [f"{t['ten']} ({t['tuoi']})" for t in st.session_state.danh_sach_tre]
+        chi_so_chon = st.selectbox("Chọn trẻ cần đánh giá:", 
+                                    range(len(danh_sach_ten)), 
+                                    format_func=lambda i: danh_sach_ten[i])
+        st.session_state.tre_hien_tai = st.session_state.danh_sach_tre[chi_so_chon]
+        tre = st.session_state.tre_hien_tai
+        
+        st.info(f"✅ Đang làm việc với: **{tre['ten']}**")
+        
+        # Nút xóa trẻ
+        if st.button(f"🗑️ Xóa trẻ này"):
+            st.session_state.danh_sach_tre.pop(chi_so_chon)
+            if st.session_state.danh_sach_tre:
+                st.session_state.tre_hien_tai = st.session_state.danh_sach_tre[0]
+            else:
+                st.session_state.tre_hien_tai = None
+            st.success("✅ Đã xóa!")
+            st.rerun()
+    else:
+        st.info("Chưa có trẻ nào. Nhấn 'Thêm trẻ mới' ở trên nhé!")
     
     st.divider()
     st.subheader("📋 Chức năng chính")
@@ -208,7 +234,6 @@ with st.sidebar:
         "📚 Thư viện hoạt động",
         "📊 Lịch sử & Báo cáo"
     ])
-
 # ==================== TAB 1: ĐÁNH GIÁ ASQ-3 ====================
 if tab_chon == "📝 Đánh giá phát triển ASQ-3":
     if not st.session_state.tre_hien_tai:
