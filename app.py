@@ -197,7 +197,10 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
             }
             st.session_state.lich_su_danh_gia.append(ket_qua)
             st.success("🎉 Đã lưu! Chuyển tab 'Kế hoạch cá nhân' để xây dựng giải pháp hỗ trợ nhé!")
-
+        # Nút xem lịch sử nhanh
+        st.markdown("---")
+        if st.button("📊 Xem tất cả hồ sơ đã lưu"):
+            st.info("👉 Chuyển tab 'Lịch sử đánh giá' để xem chi tiết tất cả hồ sơ nhé!")
 # ==================== TAB 2: SÀNG LỌC SỚM ====================
 # ==================== TAB 2: SÀNG LỌC SỚM ====================
 elif tab_chon == "🔍 Sàng lọc sớm":
@@ -330,7 +333,9 @@ elif tab_chon == "🔍 Sàng lọc sớm":
             "chi_tiet": ket_qua_sang_loc
         })
         st.success("✅ Đã lưu kết quả sàng lọc vào lịch sử!")
-
+        # Liên kết xem hồ sơ
+        st.markdown("---")
+        st.info("💡 Để xem lại các lần sàng lọc trước, chuyển sang tab **'📊 Lịch sử đánh giá'** ở thanh bên trái!")
 # ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
 # ==================== TAB 3: KẾ HOẠCH CÁ NHÂN VỚI AI ====================
 elif tab_chon == "📄 Tạo kế hoạch cá nhân":
@@ -652,6 +657,9 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
             }
             st.session_state.lich_su_danh_gia.append(ke_hoach)
             st.success("✅ Đã lưu kế hoạch thành công! Xem lại tại tab 'Lịch sử đánh giá' nhé! 🎉")
+            # Liên kết xem kế hoạch đã lưu
+        st.markdown("---")
+        st.info("💡 Xem lại tất cả kế hoạch đã tạo tại tab **'📊 Lịch sử đánh giá'** ở thanh bên trái!")
 # ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
 # ==================== TAB 4: TÀI NGUYÊN TRÒ CHƠI ====================
 elif tab_chon == "🎮 Tài nguyên trò chơi":
@@ -991,14 +999,101 @@ elif tab_chon == "🎮 Tài nguyên trò chơi":
             else:
                 st.warning("⚠️ Vui lòng nhập tên trò chơi và chọn độ tuổi!")
 # ==================== TAB 5: LỊCH SỬ ĐÁNH GIÁ ====================
+# ==================== TAB 5: LỊCH SỬ & HỒ SƠ ĐÃ LƯU ====================
 elif tab_chon == "📊 Lịch sử đánh giá":
-    st.subheader("📊 Lịch sử đánh giá")
-    if st.session_state.lich_su_danh_gia:
-        st.info(f"Tổng số đánh giá đã lưu: {len(st.session_state.lich_su_danh_gia)}")
-        for i, ket_qua in enumerate(reversed(st.session_state.lich_su_danh_gia), 1):
-            with st.expander(f"📅 {ket_qua['ngay']} — {ket_qua['ten_tre']} ({ket_qua['tuoi']})"):
-                st.write("**Người đánh giá:**", ket_qua.get('nguoi_danh_gia', 'Không ghi'))
-                for linh_vuc, diem in ket_qua['diem'].items():
-                    st.write(f"- **{linh_vuc}:** {diem}/60 điểm")
+    st.subheader("📊 Hồ sơ lưu trữ & Lịch sử theo dõi")
+    st.info(f"Tổng số hồ sơ đã lưu: **{len(st.session_state.lich_su_danh_gia)}**")
+    
+    if not st.session_state.lich_su_danh_gia:
+        st.info("📋 Chưa có hồ sơ nào được lưu. Hoàn thành đánh giá hoặc tạo kế hoạch để lưu kết quả nhé!")
     else:
-        st.info("Chưa có lịch sử đánh giá nào. Hoàn thành một đánh giá ở tab 'Đánh giá ASQ-3' để lưu kết quả nhé!")
+        # Tạo bộ lọc
+        col_loc1, col_loc2 = st.columns(2)
+        with col_loc1:
+            loc_loai = st.selectbox("Lọc theo loại hồ sơ:", 
+                ["Tất cả"] + list(set([hs.get('loai_danh_gia', hs.get('loai', 'Khác')) 
+                     for hs in st.session_state.lich_su_danh_gia])))
+        with col_loc2:
+            loc_tre = st.selectbox("Lọc theo trẻ:",
+                ["Tất cả"] + list(set([hs.get('ten_tre', 'Không ghi tên') 
+                     for hs in st.session_state.lich_su_danh_gia])))
+        
+        st.markdown("---")
+        
+        # Lọc danh sách
+        ds_hs_hien_thi = []
+        for hs in reversed(st.session_state.lich_su_danh_gia):
+            hien_thi = True
+            if loc_loai != "Tất cả":
+                loai_hs = hs.get('loai_danh_gia', hs.get('loai', ''))
+                if loc_loai not in loai_hs:
+                    hien_thi = False
+            if loc_tre != "Tất cả":
+                if hs.get('ten_tre', '') != loc_tre:
+                    hien_thi = False
+            if hien_thi:
+                ds_hs_hien_thi.append(hs)
+        
+        if not ds_hs_hien_thi:
+            st.info("🔍 Không tìm thấy hồ sơ phù hợp với điều kiện lọc!")
+        else:
+            st.success(f"✅ Tìm thấy {len(ds_hs_hien_thi)} hồ sơ")
+            
+            # Hiển thị danh sách với nút xem chi tiết
+            for chi_so, hs in enumerate(ds_hs_hien_thi):
+                ten_tre = hs.get('ten_tre', 'Không ghi tên')
+                ngay = hs.get('ngay', 'Không rõ ngày')
+                loai = hs.get('loai_danh_gia', hs.get('loai', 'Hồ sơ'))
+                tuoi = hs.get('tuoi', '')
+                
+                with st.expander(f"📅 {ngay} — {ten_tre} ({tuoi}) | {loai}", expanded=False):
+                    st.markdown("#### 📄 Thông tin hồ sơ")
+                    st.write(f"**Ngày tạo:** {ngay}")
+                    st.write(f"**Tên trẻ:** {ten_tre}")
+                    if tuoi:
+                        st.write(f"**Độ tuổi:** {tuoi}")
+                    
+                    st.markdown("---")
+                    
+                    # Hiển thị nội dung theo loại hồ sơ
+                    loai_hs = hs.get('loai_danh_gia', hs.get('loai', ''))
+                    
+                    if "Sàng lọc sớm" in loai_hs:
+                        st.markdown("#### 🔍 Kết quả Sàng lọc sớm")
+                        st.write(f"- **Tổng dấu hiệu:** {hs.get('dau_hieu_tong', 'Không ghi')}")
+                        st.write(f"- **Chưa thể hiện:** {hs.get('dau_hieu_chua_dat', 'Không ghi')}")
+                        if 'chi_tiet' in hs:
+                            with st.expander("Xem chi tiết từng dấu hiệu"):
+                                for ten_dh, da_dat in hs['chi_tiet'].items():
+                                    trang_thai = "✅ Đạt" if da_dat else "❌ Chưa đạt"
+                                    st.write(f"- {trang_thai}: {ten_dh}")
+                    
+                    elif "Kế hoạch hỗ trợ cá nhân" in loai_hs:
+                        st.markdown("#### 📋 Thông tin Kế hoạch cá nhân")
+                        st.write(f"**Người lập:** {hs.get('nguoi_lap', 'Không ghi')}")
+                        st.write(f"**Điểm mạnh:** {hs.get('diem_manh', 'Chưa ghi nhận')}")
+                        lnv = hs.get('linh_vuc_can_ho_tro', hs.get('linh_vuc_uu_tien', []))
+                        st.write(f"**Lĩnh vực ưu tiên hỗ trợ:** {', '.join(lnv) if lnv else 'Chưa chọn'}")
+                        st.write(f"**Mức độ hỗ trợ:** {hs.get('muc_do_ho_tro', 'Không ghi')}")
+                        st.write(f"**Mô tả khó khăn:** {hs.get('mo_ta_kho_khan', 'Chưa mô tả')}")
+                    
+                    else: # Đánh giá ASQ-3
+                        st.markdown("#### 📊 Kết quả Đánh giá ASQ-3")
+                        if 'diem' in hs:
+                            for linh_vuc, diem in hs['diem'].items():
+                                st.metric(label=linh_vuc, value=f"{diem}/60")
+                                st.progress(diem / 60)
+                                # Đánh giá nhanh
+                                if diem >= 50:
+                                    st.success("✅ Phát triển tốt")
+                                elif 30 <= diem < 50:
+                                    st.warning("⚠️ Cần theo dõi")
+                                else:
+                                    st.error("🔴 Cần hỗ trợ thêm")
+                                st.markdown("---")
+                    
+                    # Nút xóa hồ sơ
+                    if st.button(f"🗑️ Xóa hồ sơ này", key=f"xoa_{chi_so}_{ngay}"):
+                        st.session_state.lich_su_danh_gia.remove(hs)
+                        st.success("✅ Đã xóa hồ sơ! Tải lại trang để cập nhật danh sách.")
+                        st.rerun()
