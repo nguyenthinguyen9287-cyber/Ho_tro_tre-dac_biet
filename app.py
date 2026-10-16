@@ -199,9 +199,137 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
             st.success("🎉 Đã lưu! Chuyển tab 'Kế hoạch cá nhân' để xây dựng giải pháp hỗ trợ nhé!")
 
 # ==================== TAB 2: SÀNG LỌC SỚM ====================
+# ==================== TAB 2: SÀNG LỌC SỚM ====================
 elif tab_chon == "🔍 Sàng lọc sớm":
-    st.subheader("🔍 Bảng theo dõi dấu hiệu phát triển")
-    st.info("Chức năng đang được phát triển. Vui lòng quay lại sau!")
+    st.subheader("🔍 Bảng sàng lọc dấu hiệu phát triển trẻ mầm non")
+    st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
+    
+    # Chọn độ tuổi phù hợp
+    nhom_tuoi_sang_loc = st.selectbox("Chọn nhóm độ tuổi cần sàng lọc:", 
+                                        ["18–24 tháng", "25–36 tháng"])
+    
+    st.markdown("---")
+    
+    # Dữ liệu dấu hiệu sàng lọc theo độ tuổi
+    if nhom_tuoi_sang_loc == "18–24 tháng":
+        du_lieu_sang_loc = {
+            "Ngôn ngữ & Giao tiếp": [
+                ("Trẻ có thể chỉ ra đồ vật khi được gọi tên?", False),
+                ("Trẻ có thể nói ít nhất 6–10 từ có nghĩa?", False),
+                ("Trẻ có thể làm theo yêu cầu đơn giản không cần cử chỉ?", False),
+                ("Trẻ có thể thu hút sự chú ý của người khác khi cần giúp đỡ?", False)
+            ],
+            "Vận động": [
+                ("Trẻ có thể đi độc lập, không cần nắm tay?", False),
+                ("Trẻ có thể nhặt đồ vật nhỏ bằng ngón tay cái và ngón trỏ?", False),
+                ("Trẻ có thể gõ hai vật vào nhau?", False),
+                ("Trẻ có thể lật từng trang sách?", False)
+            ],
+            "Xã hội & Cảm xúc": [
+                ("Trẻ có thể bắt chước hành động đơn giản của người lớn?", False),
+                ("Trẻ quan tâm đến trẻ khác, nhìn hoặc đến gần bạn cùng trang lứa?", False),
+                ("Trẻ có thể biểu lộ cảm xúc rõ ràng khi vui hoặc không vui?", False),
+                ("Trẻ phản hồi khi được gọi tên?", False)
+            ],
+            "Hành vi & Chú ý": [
+                ("Trẻ có thể duy trì chú ý với một hoạt động ít nhất 2–3 phút?", False),
+                ("Trẻ có thể chơi với đồ vật theo chức năng (không chỉ cầm ném)?", False),
+                ("Trẻ tiếp xúc bằng mắt khi tương tác?", False),
+                ("Trẻ không có hành vi lặp đi lặp lại bất thường (vẫy tay, lắc đầu liên tục)?", False)
+            ]
+        }
+    else: # 25–36 tháng
+        du_lieu_sang_loc = {
+            "Ngôn ngữ & Giao tiếp": [
+                ("Trẻ có thể nói cụm từ gồm 2–3 từ?", False),
+                ("Trẻ trả lời câu hỏi đơn giản bằng lời nói?", False),
+                ("Người ngoài gia đình hiểu được khoảng 50% lời nói của trẻ?", False),
+                ("Trẻ kể lại một sự việc đơn giản đã xảy ra?", False)
+            ],
+            "Vận động": [
+                ("Trẻ có thể chạy, dừng lại và đổi hướng?", False),
+                ("Trẻ có thể đá bóng về phía trước?", False),
+                ("Trẻ có thể xếp 4–6 khối gỗ chồng lên nhau?", False),
+                ("Trẻ cố gắng tự cởi quần áo, tất dép?", False)
+            ],
+            "Xã hội & Cảm xúc": [
+                ("Trẻ chơi cùng bạn bè, chia sẻ đồ vật đơn giản?", False),
+                ("Trẻ có thể thực hiện theo quy tắc đơn giản?", False),
+                ("Trẻ thể hiện sự đồng cảm khi người khác buồn?", False),
+                ("Trẻ tách khỏi người thân mà không quá hoảng sợ?", False)
+            ],
+            "Hành vi & Chú ý": [
+                ("Trẻ có thể hoàn thành một nhiệm vụ đơn giản theo hướng dẫn?", False),
+                ("Trẻ không có hành vi tự gây đau cho bản thân?", False),
+                ("Trẻ đa dạng hóa cách chơi với đồ vật khác nhau?", False),
+                ("Trẻ đáp ứng với tên gọi của mình một cách nhất quán?", False)
+            ]
+        }
+    
+    # Lưu trạng thái trả lời
+    ket_qua_sang_loc = {}
+    tong_dau_hieu = 0
+    tong_dau_hieu_chua_dat = 0
+    
+    for nhom, danh_sach_dau_hieu in du_lieu_sang_loc.items():
+        st.markdown(f"### 📌 {nhom}")
+        st.caption(f"Đánh dấu ✅ nếu trẻ thể hiện được dấu hiệu này")
+        
+        for i, (dau_hieu, mac_dinh) in enumerate(danh_sach_dau_hieu):
+            da_dat = st.checkbox(dau_hieu, value=mac_dinh, key=f"sl_{nhom}_{i}")
+            ket_qua_sang_loc[f"{nhom} - {dau_hieu}"] = da_dat
+            tong_dau_hieu += 1
+            if not da_dat:
+                tong_dau_hieu_chua_dat += 1
+        
+        st.markdown("---")
+    
+    # Nút xem kết quả
+    if st.button("📊 Xem kết quả sàng lọc"):
+        ty_le_chua_dat = tong_dau_hieu_chua_dat / tong_dau_hieu * 100
+        ty_le_dat = 100 - ty_le_chua_dat
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Tổng số dấu hiệu", tong_dau_hieu)
+        with col2:
+            st.metric("Số dấu hiệu chưa thể hiện", tong_dau_hieu_chua_dat)
+        
+        st.progress(ty_le_dat / 100)
+        
+        # Đánh giá và khuyến nghị
+        if ty_le_chua_dat >= 40:
+            st.error("""
+### 🔴 Cần chú ý — Khuyến nghị tham khảo chuyên gia
+- Nhiều dấu hiệu phát triển chưa thể hiện rõ
+- **Khuyến nghị:** Thực hiện đánh giá chi tiết hơn bằng bộ ASQ-3 và tham khảo ý kiến chuyên gia tâm lý/trị liệu ngôn ngữ
+- Quan sát và ghi chép thêm hành vi của trẻ trong sinh hoạt hàng ngày
+            """)
+        elif 20 <= ty_le_chua_dat < 40:
+            st.warning("""
+### ⚠️ Cần theo dõi và hỗ trợ thêm
+- Một số dấu hiệu chưa thể hiện rõ hoặc chưa ổn định
+- **Khuyến nghị:** Tạo điều kiện và môi trường hỗ trợ trẻ thực hiện các kỹ năng này thông qua trò chơi hàng ngày
+- Theo dõi lại sau 1–2 tháng
+            """)
+        else:
+            st.success("""
+### ✅ Phát triển theo lộ trình bình thường
+- Hầu hết các dấu hiệu quan sát được đều thể hiện tốt
+- **Khuyến nghị:** Tiếp tục duy trì môi trường yêu thương, kích thích phát triển toàn diện cho trẻ
+            """)
+    
+    # Lưu kết quả
+    if st.button("💾 Lưu kết quả sàng lọc"):
+        st.session_state.lich_su_danh_gia.append({
+            "ngay": datetime.now().strftime("%d/%m/%Y %H:%M"),
+            "loai_danh_gia": "Sàng lọc sớm",
+            "nhom_tuoi": nhom_tuoi_sang_loc,
+            "dau_hieu_tong": tong_dau_hieu,
+            "dau_hieu_chua_dat": tong_dau_hieu_chua_dat,
+            "chi_tiet": ket_qua_sang_loc
+        })
+        st.success("✅ Đã lưu kết quả sàng lọc vào lịch sử!")
 
 # ==================== TAB 3: KẾ HOẠCH CÁ NHÂN ====================
 elif tab_chon == "📄 Tạo kế hoạch cá nhân":
