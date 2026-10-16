@@ -433,24 +433,44 @@ elif tab_chon == "📊 Lịch sử & Báo cáo":
     else:
         st.write(f"Tổng số bản ghi: {len(st.session_state.lich_su_danh_gia)}")
         
+        can_xoa = False
         for chi_so, ban_ghi in enumerate(reversed(st.session_state.lich_su_danh_gia), 1):
-            with st.expander(f"📅 {ban_ghi['ngay']} — {ban_ghi['ten_tre']}"):
-                if ban_ghi.get("loai") == "ASQ-3":
-                    st.markdown("**📋 Kết quả đánh giá ASQ-3:**")
-                    for lv, diem in ban_ghi["diem"].items():
-                        st.metric(label=lv, value=f"{diem}/60")
-                elif ban_ghi.get("loai") == "KeHoachCaNhan":
-                    st.markdown(f"**📄 Kế hoạch:** {ban_ghi['muc_do']}")
-                    st.markdown(f"**Mục tiêu chung:** {ban_ghi['muc_tieu_chung']}")
-                    if ban_ghi.get("muc_tieu_rieng"):
-                        st.markdown(f"**Mục tiêu riêng:** {ban_ghi['muc_tieu_rieng']}")
-                    if ban_ghi.get("hoat_dong_rieng"):
-                        st.markdown(f"**Hoạt động:** {ban_ghi['hoat_dong_rieng']}")
-                else:
-                    st.json(ban_ghi)
+            try:
+                # Lấy thông tin an toàn, không bị lỗi nếu thiếu trường
+                ten = ban_ghi.get('ten_tre', 'Không có tên')
+                ngay = ban_ghi.get('ngay', ban_ghi.get('ngay_tao', 'Không có ngày'))
+                loai = ban_ghi.get('loai', '')
+                
+                with st.expander(f"📅 {ngay} — {ten}"):
+                    if loai == "ASQ-3":
+                        st.markdown("**📋 Kết quả đánh giá ASQ-3:**")
+                        if 'diem' in ban_ghi:
+                            for lv, diem in ban_ghi["diem"].items():
+                                st.metric(label=lv, value=f"{diem}/60")
+                        if 'ghi_chu' in ban_ghi and ban_ghi['ghi_chu']:
+                            st.write(f"**Ghi chú:** {ban_ghi['ghi_chu']}")
+                    elif loai == "KeHoachCaNhan":
+                        st.markdown(f"**📄 Kế hoạch:** {ban_ghi.get('muc_do', '')}")
+                        if 'muc_tieu_chung' in ban_ghi:
+                            st.write(f"**Mục tiêu:** {ban_ghi['muc_tieu_chung']}")
+                        if 'muc_tieu_rieng' in ban_ghi and ban_ghi['muc_tieu_rieng']:
+                            st.write(f"**Mục tiêu riêng:** {ban_ghi['muc_tieu_rieng']}")
+                        if 'hoat_dong_rieng' in ban_ghi and ban_ghi['hoat_dong_rieng']:
+                            st.write(f"**Hoạt động:** {ban_ghi['hoat_dong_rieng']}")
+                    else:
+                        # Bản ghi cũ không có cấu trúc mới
+                        st.warning("⚠️ Bản ghi này có định dạng cũ — nên xóa để tránh lỗi")
+                        st.json(ban_ghi)
+                        can_xoa = True
+            except Exception as e:
+                st.error(f"Lỗi hiển thị bản ghi số {chi_so} — nên xóa lịch sử cũ")
+                can_xoa = True
         
         st.divider()
+        if can_xoa:
+            st.warning("⚠️ Phát hiện dữ liệu cũ không tương thích — nên nhấn nút dưới đây để xóa!")
+        
         if st.button("🗑️ Xóa toàn bộ lịch sử"):
             st.session_state.lich_su_danh_gia = []
-            st.success("Đã xóa toàn bộ lịch sử!")
+            st.success("✅ Đã xóa toàn bộ lịch sử! Tạo dữ liệu mới từ đầu nhé.")
             st.rerun()
