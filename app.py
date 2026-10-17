@@ -302,11 +302,9 @@ st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm nh�
 else:
     nhom_tuoi_mac_dinh = '25-36 tháng'
     st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
-
 # Chọn nhóm độ tuổi cần sàng lọc
 danh_sach_nhom_tuoi = ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng']
 vi_tri_mac_dinh = danh_sach_nhom_tuoi.index(nhom_tuoi_mac_dinh) if nhom_tuoi_mac_dinh in danh_sach_nhom_tuoi else 1
-
 nhom_tuoi_sang_loc = st.selectbox(
     "Chọn nhóm độ tuổi cần sàng lọc:",
     danh_sach_nhom_tuoi,
@@ -314,7 +312,6 @@ nhom_tuoi_sang_loc = st.selectbox(
 )
 st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
 st.markdown("---")
-
 # Dữ liệu sàng lọc theo độ tuổi
 if nhom_tuoi_sang_loc == "18-24 tháng":
     du_lieu_sang_loc = {
@@ -380,7 +377,6 @@ if nhom_tuoi_sang_loc == "18-24 tháng":
                 ("Trẻ đáp ứng với tên gọi của mình một cách nhất quán?", False)
             ]
         }
-    
     # Lưu trạng thái trả lời
     ket_qua_sang_loc = {}
     tong_dau_hieu = 0
@@ -396,22 +392,17 @@ if nhom_tuoi_sang_loc == "18-24 tháng":
             tong_dau_hieu += 1
             if not da_dat:
                 tong_dau_hieu_chua_dat += 1
-        
         st.markdown("---")
-    
     # Nút xem kết quả
     if st.button("📊 Xem kết quả sàng lọc"):
         ty_le_chua_dat = tong_dau_hieu_chua_dat / tong_dau_hieu * 100
         ty_le_dat = 100 - ty_le_chua_dat
-        
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Tổng số dấu hiệu", tong_dau_hieu)
         with col2:
             st.metric("Số dấu hiệu chưa thể hiện", tong_dau_hieu_chua_dat)
-        
         st.progress(ty_le_dat / 100)
-        
         # Đánh giá và khuyến nghị
         if ty_le_chua_dat >= 40:
             st.error("""
@@ -433,7 +424,6 @@ if nhom_tuoi_sang_loc == "18-24 tháng":
 - Hầu hết các dấu hiệu quan sát được đều thể hiện tốt
 - **Khuyến nghị:** Tiếp tục duy trì môi trường yêu thương, kích thích phát triển toàn diện cho trẻ
             """)
-    
     # Lưu kết quả
     if st.button("💾 Lưu kết quả sàng lọc"):
         st.session_state.lich_su_danh_gia.append({
@@ -462,20 +452,15 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
         ngay_sinh = tre.get('ngay_sinh', '')
         nguoi_lap = st.text_input("Người lập kế hoạch:", value=tre.get('nguoi_danh_gia', ''))
         ngay_lap = datetime.now().strftime("%d/%m/%Y")
-        
         st.info(f"📋 Đang lập kế hoạch cho: **{ten_tre}** — {tuoi_tre}")
         st.divider()
-        
         # ==== Bước 1: Xác định thông tin & khó khăn ====
         st.markdown("### 🔍 Bước 1: Thông tin phân tích")
-        
         diem_manh = st.text_area("💪 Điểm mạnh của trẻ:",
             placeholder="Ví dụ: Trẻ rất thân thiện, thích nghe truyện, nhớ nhanh bài hát...", height=80)
-        
         linh_vuc_can_ho_tro = st.multiselect("📌 Lĩnh vực cần ưu tiên hỗ trợ:",
             ["Ngôn ngữ & Giao tiếp", "Vận động tinh", "Vận động thô", 
              "Giải quyết vấn đề", "Kỹ năng xã hội", "Tự phục vụ", "Chú ý & Hành vi"])
-        
         muc_do = st.radio("📊 Mức độ cần hỗ trợ theo ASQ-3:",
             ["🔵 Phát triển bình thường — theo dõi định kỳ",
              "🟡 Cần hỗ trợ thêm tại nhà & lớp",
@@ -484,12 +469,9 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
         
         mo_ta_kho_khan = st.text_area("📝 Mô tả cụ thể khó khăn & hành vi quan sát được:",
             placeholder="Mô tả những gì trẻ chưa làm được, tình huống khó khăn xuất hiện như thế nào, tần suất...", height=120)
-        
         st.divider()
-        
         # ==== Bước 2: AI TẠO KẾ HOẠCH TỰ ĐỘNG ====
         st.markdown("### 🤖 Bước 2: AI Tạo gợi ý kế hoạch chi tiết")
-        
         # Dữ liệu gợi ý chuẩn theo ASQ-3 và Can thiệp sớm
         goi_y_chuan = {
             "Ngôn ngữ & Giao tiếp": {
