@@ -706,9 +706,7 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
         
         # Nút lưu kế hoạch do người dùng tự điền
         st.markdown("### 💾 Lưu kế hoạch tự chỉnh sửa")
-        if st.button("📥 Lưu vào lịch sử"):
         # ==== NÚT TẢI KẾ HOẠCH RA TỆP WORD ====
-        st.markdown("---")
         st.subheader("📄 Tải kế hoạch ra tệp Word")
 
         noi_dung_word = f"""
