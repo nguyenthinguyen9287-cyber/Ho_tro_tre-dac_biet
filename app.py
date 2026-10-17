@@ -292,23 +292,16 @@ else:
     nhom_tuoi_mac_dinh = '25-36 tháng'
     st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
 
-nhom_tuoi_sang_loc = st.selectbox(
-    "Chọn nhóm độ tuổi cần sàng lọc:",
-    ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'],
-    index=['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'].index(nhom_tuoi_mac_dinh)
-)
 st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
-nhom_tuoi_mac_dinh = '25-36 tháng'
-st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
+
 # Chọn nhóm độ tuổi cần sàng lọc
-danh_sach_nhom_tuoi = ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng']
-vi_tri_mac_dinh = danh_sach_nhom_tuoi.index(nhom_tuoi_mac_dinh) if nhom_tuoi_mac_dinh in danh_sach_nhom_tuoi else 1
+danh_sach_tuoi = ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng']
 nhom_tuoi_sang_loc = st.selectbox(
     "Chọn nhóm độ tuổi cần sàng lọc:",
-    danh_sach_nhom_tuoi,
-    index=vi_tri_mac_dinh
+    danh_sach_tuoi,
+    index=1
 )
-st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
+
 st.markdown("---")
 # Dữ liệu sàng lọc theo độ tuổi
 if nhom_tuoi_sang_loc == "18-24 tháng":
