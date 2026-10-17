@@ -269,6 +269,35 @@ if tab_chon == "📝 Đánh giá phát triển ASQ-3":
 # ==================== TAB 2: SÀNG LỌC SỚM ====================
 elif tab_chon == "🔍 Sàng lọc sớm":
     st.subheader("🔍 Bảng sàng lọc dấu hiệu phát triển trẻ mầm non")
+    # === Hiển thị thông tin trẻ đang được chọn ===
+if 'tre_hien_tai' in st.session_state and st.session_state.tre_hien_tai:
+    tre = st.session_state.tre_hien_tai
+    st.info(f"""
+    👶 **Đang sàng lọc cho:** {tre.get('ten', 'Chưa có tên')}
+    📅 **Ngày sinh:** {tre.get('ngay_sinh', 'Chưa có thông tin')}
+    🎂 **Độ tuổi:** {tre.get('tuoi', 'Chưa xác định')}
+    """)
+    
+    # Tự động chọn nhóm tuổi phù hợp với trẻ
+    tuoi_tre = tre.get('tuoi', '')
+    nhom_tuoi_mapping = {
+        '18-24 tháng': '18-24 tháng',
+        '25-36 tháng': '25-36 tháng',
+        '37-48 tháng': '37-48 tháng',
+        '49-60 tháng': '49-60 tháng',
+        '61-72 tháng': '61-72 tháng'
+    }
+    nhom_tuoi_mac_dinh = nhom_tuoi_mapping.get(tuoi_tre, '25-36 tháng')
+else:
+    nhom_tuoi_mac_dinh = '25-36 tháng'
+    st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
+
+# Chọn nhóm độ tuổi cần sàng lọc
+nhom_tuoi_sang_loc = st.selectbox(
+    "Chọn nhóm độ tuổi cần sàng lọc:",
+    ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'],
+    index=['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'].index(nhom_tuoi_mac_dinh)
+)
     st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
     
     # Chọn độ tuổi phù hợp
