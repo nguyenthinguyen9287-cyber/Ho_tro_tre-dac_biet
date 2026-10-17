@@ -292,7 +292,6 @@ else:
     nhom_tuoi_mac_dinh = '25-36 tháng'
     st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
 
-# Chọn nhóm độ tuổi cần sàng lọc
 nhom_tuoi_sang_loc = st.selectbox(
     "Chọn nhóm độ tuổi cần sàng lọc:",
     ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'],
