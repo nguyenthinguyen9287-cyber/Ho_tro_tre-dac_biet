@@ -298,7 +298,7 @@ nhom_tuoi_sang_loc = st.selectbox(
     ['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'],
     index=['18-24 tháng', '25-36 tháng', '37-48 tháng', '49-60 tháng', '61-72 tháng'].index(nhom_tuoi_mac_dinh)
 )
-    st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
+st.info("Danh mục các dấu hiệu cần quan sát — Phát hiện sớm những khó khăn có thể có của trẻ")
  else:
     nhom_tuoi_mac_dinh = '25-36 tháng'
     st.warning("⚠️ Vui lòng chọn trẻ từ danh sách bên trái để sàng lọc chính xác hơn!")
