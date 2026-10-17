@@ -708,95 +708,95 @@ elif tab_chon == "📄 Tạo kế hoạch cá nhân":
         st.markdown("### 💾 Lưu kế hoạch tự chỉnh sửa")
         if st.button("📥 Lưu vào lịch sử"):
         # ==== NÚT TẢI KẾ HOẠCH RA TỆP WORD ====
-st.markdown("---")
-st.subheader("📄 Tải kế hoạch ra tệp Word")
+        st.markdown("---")
+        st.subheader("📄 Tải kế hoạch ra tệp Word")
 
-noi_dung_word = f"""
-KE HOACH HO TRO PHAT TRIEN CA NHAN
-====================================
+        noi_dung_word = f"""
+        KE HOACH HO TRO PHAT TRIEN CA NHAN
+        ====================================
+        
+        Ten tre: {ten_tre}
+        Ngay sinh: {ngay_sinh}
+        Nhom do tuoi: {tuoi_tre}
+        Ngay lap: {datetime.now().strftime('%d/%m/%Y')}
+        Nguoi lap: {nguoi_lap}
+        
+        === I. DIEM MANH CUA TRE ===
+        {diem_manh or 'Chua ghi nhan'}
 
-Ten tre: {ten_tre}
-Ngay sinh: {ngay_sinh}
-Nhom do tuoi: {tuoi_tre}
-Ngay lap: {datetime.now().strftime('%d/%m/%Y')}
-Nguoi lap: {nguoi_lap}
-
-=== I. DIEM MANH CUA TRE ===
-{diem_manh or 'Chua ghi nhan'}
-
-=== II. LINH VUC CAN HO TRO ===
-{', '.join(linh_vuc_can_ho_tro) if linh_vuc_can_ho_tro else 'Chua chon linh vuc'}
-
-Muc do ho tro: {muc_do}
-"""
-
-if 'mo_ta_kho_khan' in locals():
-    noi_dung_word += f"\nMo ta kho khan:\n{mo_ta_kho_khan}\n"
-
-noi_dung_word += f"""
-=== III. MUU TIEU HO TRO ===
-Muc tieu ngan han (1-3 thang):
-{muc_tieu_ngan_han if 'muc_tieu_ngan_han' in locals() else 'Chua dat muc tieu'}
-
-Muc tieu dai han (6-12 thang):
-{muc_tieu_dai_han if 'muc_tieu_dai_han' in locals() else 'Chua dat muc tieu'}
-"""
-
-if 'giai_phap' in locals() and giai_phap:
-    noi_dung_word += "\n=== IV. GIAI PHAP HOAT DONG ===\n"
-    for lv, thong_tin in giai_phap.items():
+        === II. LINH VUC CAN HO TRO ===
+        {', '.join(linh_vuc_can_ho_tro) if linh_vuc_can_ho_tro else 'Chua chon linh vuc'}
+        
+        Muc do ho tro: {muc_do}
+        """
+        
+        if 'mo_ta_kho_khan' in locals():
+            noi_dung_word += f"\nMo ta kho khan:\n{mo_ta_kho_khan}\n"
+        
         noi_dung_word += f"""
----
-{lv.upper()}:
-- Hoat dong: {thong_tin.get('hoat_dong', 'Chua mo ta')}
-- Tan suat: {thong_tin.get('tan_suat', 'Chua ghi')}
-- Nguoi thuc hien: {thong_tin.get('nguoi_thuc_hien', 'Chua chi dinh')}
-- Ghi chu: {thong_tin.get('ghi_chu', 'Khong co')}
-"""
-
-noi_dung_word += f"""
-=== V. THEO DOI & PHOI HOP ===
-Chu ky xem xet lai: {chu_ky_danh_gia if 'chu_ky_danh_gia' in locals() else 'Moi thang'}
-Ngay du kien xem xet lai: {ngay_danh_gia_lai.strftime('%d/%m/%Y') if 'ngay_danh_gia_lai' in locals() and ngay_danh_gia_lai else 'Chua dat'}
-
-Phoi hop gia dinh - truong:
-{nguoi_phu_hop if 'nguoi_phu_hop' in locals() else 'Chua ghi nhan'}
-
-KY XAC NHAN:
-Nguoi lap ke hoach: _______________    Ngay: _______________
-Phu huynh/Dai dien gia dinh: _______________    Ngay: _______________
-"""
-
-tep_word = BytesIO()
-tep_word.write(noi_dung_word.encode('utf-8'))
-tep_word.seek(0)
-
-st.download_button(
-    label="📥 Tai ke hoach ra tep Word (.doc)",
-    data=tep_word,
-    file_name=f"KeHoach_{ten_tre.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.doc",
-    mime="application/msword"
-)
-st.info("💡 Tep da tai ve may — mo bang Word de chinh sua, in ra de dang!")
-
-st.markdown("---")
-
-# ==== LƯU KẾ HOẠCH VÀO LỊCH SỬ ====
-st.markdown("### 💾 Lưu kế hoạch tự chỉnh sửa")
-if st.button("💾 Lưu vào lịch sử"):
-    ke_hoach = {
-        "ngay": datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "loai": "Kế hoạch hỗ trợ cá nhân",
-        "ten_tre": ten_tre,
-        "tuoi": tuoi_tre,
-        "ngay_sinh": str(ngay_sinh),
-        "nguoi_lap": nguoi_lap,
-        "diem_manh": diem_manh,
-        "linh_vuc_uu_tien": linh_vuc_can_ho_tro,
-        "muc_do_ho_tro": muc_do
-    }
-    st.session_state.lich_su_danh_gia.append(ke_hoach)
-    st.success("✅ Đã lưu kế hoạch thành công! Xem lại tại tab 'Lịch sử đánh giá'")
+        === III. MUU TIEU HO TRO ===
+        Muc tieu ngan han (1-3 thang):
+        {muc_tieu_ngan_han if 'muc_tieu_ngan_han' in locals() else 'Chua dat muc tieu'}
+        
+        Muc tieu dai han (6-12 thang):
+        {muc_tieu_dai_han if 'muc_tieu_dai_han' in locals() else 'Chua dat muc tieu'}
+        """
+        
+        if 'giai_phap' in locals() and giai_phap:
+            noi_dung_word += "\n=== IV. GIAI PHAP HOAT DONG ===\n"
+            for lv, thong_tin in giai_phap.items():
+                noi_dung_word += f"""
+        ---
+        {lv.upper()}:
+        - Hoat dong: {thong_tin.get('hoat_dong', 'Chua mo ta')}
+        - Tan suat: {thong_tin.get('tan_suat', 'Chua ghi')}
+        - Nguoi thuc hien: {thong_tin.get('nguoi_thuc_hien', 'Chua chi dinh')}
+        - Ghi chu: {thong_tin.get('ghi_chu', 'Khong co')}
+        """
+        
+        noi_dung_word += f"""
+        === V. THEO DOI & PHOI HOP ===
+        Chu ky xem xet lai: {chu_ky_danh_gia if 'chu_ky_danh_gia' in locals() else 'Moi thang'}
+        Ngay du kien xem xet lai: {ngay_danh_gia_lai.strftime('%d/%m/%Y') if 'ngay_danh_gia_lai' in locals() and ngay_danh_gia_lai else 'Chua dat'}
+        
+        Phoi hop gia dinh - truong:
+        {nguoi_phu_hop if 'nguoi_phu_hop' in locals() else 'Chua ghi nhan'}
+        
+        KY XAC NHAN:
+        Nguoi lap ke hoach: _______________    Ngay: _______________
+        Phu huynh/Dai dien gia dinh: _______________    Ngay: _______________
+        """
+        
+        tep_word = BytesIO()
+        tep_word.write(noi_dung_word.encode('utf-8'))
+        tep_word.seek(0)
+        
+        st.download_button(
+            label="📥 Tai ke hoach ra tep Word (.doc)",
+            data=tep_word,
+            file_name=f"KeHoach_{ten_tre.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.doc",
+            mime="application/msword"
+        )
+        st.info("💡 Tep da tai ve may — mo bang Word de chinh sua, in ra de dang!")
+        
+        st.markdown("---")
+        
+        # ==== LƯU KẾ HOẠCH VÀO LỊCH SỬ ====
+        st.markdown("### 💾 Lưu kế hoạch tự chỉnh sửa")
+        if st.button("💾 Lưu vào lịch sử"):
+            ke_hoach = {
+                "ngay": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "loai": "Kế hoạch hỗ trợ cá nhân",
+                "ten_tre": ten_tre,
+                "tuoi": tuoi_tre,
+                "ngay_sinh": str(ngay_sinh),
+                "nguoi_lap": nguoi_lap,
+                "diem_manh": diem_manh,
+                "linh_vuc_uu_tien": linh_vuc_can_ho_tro,
+                "muc_do_ho_tro": muc_do
+            }
+            st.session_state.lich_su_danh_gia.append(ke_hoach)
+            st.success("✅ Đã lưu kế hoạch thành công! Xem lại tại tab 'Lịch sử đánh giá'")
             # Liên kết xem kế hoạch đã lưu
         st.markdown("---")
         st.info("💡 Xem lại tất cả kế hoạch đã tạo tại tab **'📊 Lịch sử đánh giá'** ở thanh bên trái!")
